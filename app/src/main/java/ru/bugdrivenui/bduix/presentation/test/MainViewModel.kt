@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation
+package ru.bugdrivenui.bduix.presentation.test
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

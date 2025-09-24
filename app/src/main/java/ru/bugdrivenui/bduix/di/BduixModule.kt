@@ -15,7 +15,9 @@ import ru.bugdrivenui.bduix.data.DataConstants.APPLICATION_JSON
 import ru.bugdrivenui.bduix.data.DataConstants.BASE_URL
 import ru.bugdrivenui.bduix.data.DataConstants.TIMEOUT_SECONDS
 import ru.bugdrivenui.bduix.data.api.TestApi
+import ru.bugdrivenui.bduix.data.repository.BduiScreenRepository
 import ru.bugdrivenui.bduix.data.repository.TestRepository
+import ru.bugdrivenui.bduix.domain.repository.IBduiScreenRepository
 import ru.bugdrivenui.bduix.domain.repository.ITestRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -23,6 +25,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class BduixModule {
+
+    @Binds
+    abstract fun bindBduiScreenRepository(impl: BduiScreenRepository): IBduiScreenRepository
 
     companion object {
 
