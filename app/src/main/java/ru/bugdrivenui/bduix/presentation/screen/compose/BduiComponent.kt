@@ -1,23 +1,14 @@
 package ru.bugdrivenui.bduix.presentation.screen.compose
 
 import androidx.compose.runtime.Composable
-import kotlinx.coroutines.flow.StateFlow
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentState
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
 
 @Composable
 fun BduiComponent(
-    componentId: String,
-    model: BduiScreenUiModel,
+    component: BduiComponentUi,
     onAction: (BduiActionUi) -> Unit,
-    componentStateProvider: (String) -> StateFlow<BduiComponentState>,
 ) {
-    val component = model.componentById[componentId] ?: return
-    // TODO для локального состояния
-    // val state = componentStateProvider(componentId).collectAsStateWithLifecycle()
-
     when (component) {
         is BduiComponentUi.Box -> TODO()
         is BduiComponentUi.Button -> TODO()

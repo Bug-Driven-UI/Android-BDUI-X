@@ -3,6 +3,7 @@ package ru.bugdrivenui.bduix.presentation.screen.model
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
+@Immutable
 sealed interface BduiComponentUi {
 
     val id: String
@@ -51,11 +52,17 @@ sealed interface BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.INPUT
     }
 
+    @Immutable
+    sealed interface Container : BduiComponentUi {
+        val children: List<BduiComponentUi>
+    }
+
     data class Column(
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
-    ) : BduiComponentUi {
+        override val children: List<BduiComponentUi>,
+    ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.COLUMN
     }
 
@@ -63,7 +70,8 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
-    ) : BduiComponentUi {
+        override val children: List<BduiComponentUi>,
+    ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.ROW
     }
 
@@ -71,7 +79,8 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
-    ) : BduiComponentUi {
+        override val children: List<BduiComponentUi>,
+    ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.BOX
     }
 }

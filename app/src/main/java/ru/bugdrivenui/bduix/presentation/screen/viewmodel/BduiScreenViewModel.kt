@@ -4,12 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.bugdrivenui.bduix.domain.interactor.BduiInteractor
@@ -17,7 +13,6 @@ import ru.bugdrivenui.bduix.domain.state.State
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.screen.factory.BduiScreenFactory
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentState
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
 import javax.inject.Inject
 
@@ -32,23 +27,6 @@ class BduiScreenViewModel @Inject constructor(
 
     init {
         startCollectFlow()
-    }
-
-    fun stateFor(componentId: String): StateFlow<BduiComponentState> {
-        return uiState
-            .map { state ->
-                when (state) {
-                    is UiState.Content -> {
-                        state.data.stateById[componentId] ?: BduiComponentState.Stateless
-                    }
-                    else -> BduiComponentState.Stateless
-                }
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = BduiComponentState.Stateless,
-            )
     }
 
     fun onAction(action: BduiActionUi) {

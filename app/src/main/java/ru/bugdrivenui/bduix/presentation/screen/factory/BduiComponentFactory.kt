@@ -16,32 +16,41 @@ import javax.inject.Inject
 class BduiComponentFactory @Inject constructor() {
 
     fun create(
-        id: String,
         component: BduiComponentResponse,
     ): BduiComponentUi {
         return when (component.type) {
-            BduiComponentType.TEXT -> createTextComponent(id, component)
+            BduiComponentType.TEXT -> createTextComponent(component)
             BduiComponentType.IMAGE -> TODO()
             BduiComponentType.BUTTON -> TODO()
             BduiComponentType.INPUT -> TODO()
             BduiComponentType.ROW -> TODO()
-            BduiComponentType.COLUMN -> TODO()
+            BduiComponentType.COLUMN -> createColumnComponent(component)
             BduiComponentType.BOX -> TODO()
         }
     }
 
     private fun createTextComponent(
-        id: String,
         component: BduiComponentResponse,
     ): BduiComponentUi {
         return BduiComponentUi.Text(
-            id = id,
+            id = component.id,
             hash = component.hash,
             interactions = component.interactions?.let(::createInteractions),
             text = component.text.orEmpty(),
             textColor = component.color
                 ?.let { BduiColor(Color(it.toColorInt())) }
                 ?: BduiColor.Default
+        )
+    }
+
+    private fun createColumnComponent(
+        component: BduiComponentResponse,
+    ): BduiComponentUi {
+        return BduiComponentUi.Column(
+            id = component.id,
+            hash = component.hash,
+            interactions = component.interactions?.let(::createInteractions),
+            children = component.children?.map(::create).orEmpty(),
         )
     }
 
