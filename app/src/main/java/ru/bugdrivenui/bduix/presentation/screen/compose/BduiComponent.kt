@@ -20,7 +20,13 @@ fun BduiComponent(
             )
         }
 
-        is BduiComponentUi.Button -> TODO()
+        is BduiComponentUi.Button -> {
+            BduiButtonComponent(
+                modifier = modifier,
+                component = component,
+            )
+        }
+
         is BduiComponentUi.Image -> TODO()
         is BduiComponentUi.Input -> TODO()
         is BduiComponentUi.Text -> {

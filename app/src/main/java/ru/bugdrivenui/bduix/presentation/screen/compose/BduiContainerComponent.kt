@@ -1,12 +1,16 @@
 package ru.bugdrivenui.bduix.presentation.screen.compose
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
@@ -62,7 +66,16 @@ private fun BoxScope.BduiComponentWrapper(
     onAction: (BduiActionUi) -> Unit,
 ) {
     BduiComponent(
-        modifier = Modifier.bduiBaseProperties(component),
+        modifier = Modifier
+            .bduiBaseProperties(component)
+            .ifNotNull(component.interactions?.onClick) { onClickActions ->
+                clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = ripple(),
+                    enabled = (component as? BduiComponentUi.Button)?.enabled ?: true,
+                    onClick = { onClickActions.forEach { onAction(it) } },
+                )
+            },
         component = component,
         onAction = onAction,
     )
@@ -78,7 +91,15 @@ private fun ColumnScope.BduiComponentWrapper(
     BduiComponent(
         modifier = Modifier
             .bduiBaseProperties(component)
-            .ifNotNull(weightedHeight) { weight(it) },
+            .ifNotNull(weightedHeight) { weight(it) }
+            .ifNotNull(component.interactions?.onClick) { onClickActions ->
+                clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = ripple(),
+                    enabled = (component as? BduiComponentUi.Button)?.enabled ?: true,
+                    onClick = { onClickActions.forEach { onAction(it) } },
+                )
+            },
         component = component,
         onAction = onAction,
     )
@@ -94,7 +115,15 @@ private fun RowScope.BduiComponentWrapper(
     BduiComponent(
         modifier = Modifier
             .bduiBaseProperties(component)
-            .ifNotNull(weightedWidth) { weight(it) },
+            .ifNotNull(weightedWidth) { weight(it) }
+            .ifNotNull(component.interactions?.onClick) { onClickActions ->
+                clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = ripple(),
+                    enabled = (component as? BduiComponentUi.Button)?.enabled ?: true,
+                    onClick = { onClickActions.forEach { onAction(it) } },
+                )
+            },
         component = component,
         onAction = onAction,
     )

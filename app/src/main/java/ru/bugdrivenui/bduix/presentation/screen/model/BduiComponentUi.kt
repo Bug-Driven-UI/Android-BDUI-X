@@ -62,8 +62,8 @@ sealed interface BduiComponentUi {
         override val backgroundColor: BduiColor?,
         override val border: BduiBorder?,
         override val shape: BduiShape?,
-        val text: String,
-        val textColor: BduiColor,
+        val text: BduiText,
+        val enabled: Boolean,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.BUTTON
     }
@@ -142,6 +142,18 @@ sealed interface BduiComponentUi {
     }
 }
 
+data class BduiText(
+    val value: String,
+    val color: BduiColor,
+    val style: BduiTextStyle,
+)
+
+data class BduiTextStyle(
+    val decorationType: BduiTextDecorationType,
+    val weight: Int,
+    val size: Int,
+)
+
 data class BduiColor(val value: Color) {
     companion object {
         val Default = BduiColor(Color.Red)
@@ -215,4 +227,14 @@ enum class BduiInteractionTypeUi {
 enum class BduiActionTypeUi {
     COMMAND,
     UPDATE_SCREEN,
+}
+
+enum class BduiTextDecorationType {
+    REGULAR,
+    BOLD,
+    ITALIC,
+    UNDERLINE,
+    OVERLINE,
+    STRIKETHROUGH,
+    STRIKETHROUGH_RED,
 }

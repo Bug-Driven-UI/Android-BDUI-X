@@ -21,15 +21,15 @@ import ru.bugdrivenui.bduix.presentation.screen.model.BduiShape
 import ru.bugdrivenui.bduix.utils.orZero
 
 fun String?.toBduiColor(
-    defaultColor: BduiColor = BduiColor.Default,
+    fallbackColor: BduiColor = BduiColor.Default,
 ): BduiColor {
     return this
         ?.let {
             runCatching { Color(it.toColorInt()) }
                 .map { parsed -> BduiColor(parsed) }
-                .getOrElse { defaultColor }
+                .getOrElse { fallbackColor }
         }
-        ?: defaultColor
+        ?: fallbackColor
 }
 
 fun BduiBorderResponse?.toBduiBorder(): BduiBorder? {
