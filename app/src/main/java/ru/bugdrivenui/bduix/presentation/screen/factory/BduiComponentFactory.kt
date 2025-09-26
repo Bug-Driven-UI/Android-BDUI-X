@@ -1,15 +1,13 @@
 package ru.bugdrivenui.bduix.presentation.screen.factory
 
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
-import ru.bugdrivenui.bduix.data.model.BduiActionType
 import ru.bugdrivenui.bduix.data.model.BduiComponentResponse
 import ru.bugdrivenui.bduix.data.model.BduiComponentType
-import ru.bugdrivenui.bduix.data.model.BduiInteraction
-import ru.bugdrivenui.bduix.data.model.BduiInteractionType
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiColor
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInteractionsUi
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiBorder
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiColor
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiInteractions
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiShape
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toComponentInsets
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toComponentSize
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
 import javax.inject.Inject
 
@@ -35,11 +33,16 @@ class BduiComponentFactory @Inject constructor() {
         return BduiComponentUi.Text(
             id = component.id,
             hash = component.hash,
-            interactions = component.interactions?.let(::createInteractions),
+            interactions = component.interactions?.toBduiInteractions(),
+            paddings = component.paddings.toComponentInsets(),
+            margins = component.margins.toComponentInsets(),
+            width = component.width.toComponentSize(),
+            height = component.height.toComponentSize(),
+            backgroundColor = component.backgroundColor.toBduiColor(),
             text = component.text.orEmpty(),
-            textColor = component.color
-                ?.let { BduiColor(Color(it.toColorInt())) }
-                ?: BduiColor.Default
+            textColor = component.color.toBduiColor(),
+            border = component.border.toBduiBorder(),
+            shape = component.shape.toBduiShape(),
         )
     }
 
@@ -49,54 +52,15 @@ class BduiComponentFactory @Inject constructor() {
         return BduiComponentUi.Column(
             id = component.id,
             hash = component.hash,
-            interactions = component.interactions?.let(::createInteractions),
+            interactions = component.interactions?.toBduiInteractions(),
+            paddings = component.paddings.toComponentInsets(),
+            margins = component.margins.toComponentInsets(),
+            width = component.width.toComponentSize(),
+            height = component.height.toComponentSize(),
+            backgroundColor = component.backgroundColor.toBduiColor(),
             children = component.children?.map(::create).orEmpty(),
+            border = component.border.toBduiBorder(),
+            shape = component.shape.toBduiShape(),
         )
-    }
-
-    private fun createInteractions(
-        interactions: List<BduiInteraction>,
-    ): BduiComponentInteractionsUi {
-        return BduiComponentInteractionsUi(
-            onClick = createActionsForInteraction(
-                interactions = interactions,
-                interactionType = BduiInteractionType.ON_CLICK,
-            ),
-            onShow = createActionsForInteraction(
-                interactions = interactions,
-                interactionType = BduiInteractionType.ON_SHOW,
-            )
-        )
-    }
-
-    private fun createActionsForInteraction(
-        interactions: List<BduiInteraction>,
-        interactionType: BduiInteractionType,
-    ): List<BduiActionUi>? {
-        return interactions
-            .find { it.type == interactionType }
-            ?.let(::createInteractionActions)
-    }
-
-    private fun createInteractionActions(
-        interaction: BduiInteraction,
-    ): List<BduiActionUi> {
-        return interaction.actions.map { action ->
-            when (action.type) {
-                BduiActionType.COMMAND -> {
-                    BduiActionUi.Command(
-                        // TODO перепроверить маппинг, мб сделать валидацию
-                        name = action.name.orEmpty(),
-                        params = action.params,
-                    )
-                }
-                BduiActionType.UPDATE_SCREEN -> {
-                    BduiActionUi.UpdateScreen(
-                        screenName = action.screenName.orEmpty(),
-                        screenNavigationParams = action.screenNavigationParams,
-                    )
-                }
-            }
-        }
     }
 }

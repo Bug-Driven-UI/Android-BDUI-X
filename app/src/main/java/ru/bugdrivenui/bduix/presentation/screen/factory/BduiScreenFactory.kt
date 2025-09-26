@@ -14,9 +14,7 @@ class BduiScreenFactory @Inject constructor(
 
         return BduiScreenUiModel(
             screenId = response.screenId,
-            components = response.components.map { component ->
-                componentFactory.create(component)
-            }
+            components = response.components.map(componentFactory::create),
         )
     }
 }

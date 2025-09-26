@@ -10,11 +10,25 @@ sealed interface BduiComponentUi {
     val hash: String
     val type: BduiComponentTypeUi
     val interactions: BduiComponentInteractionsUi?
+    val paddings: BduiComponentInsetsUi?
+    val margins: BduiComponentInsetsUi?
+    val width: BduiComponentSize
+    val height: BduiComponentSize
+    val backgroundColor: BduiColor?
+    val border: BduiBorder?
+    val shape: BduiShape?
 
     data class Text(
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
         val text: String,
         val textColor: BduiColor,
     ) : BduiComponentUi {
@@ -25,6 +39,13 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
         val imageUrl: String,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.IMAGE
@@ -34,6 +55,13 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
         val text: String,
         val textColor: BduiColor,
     ) : BduiComponentUi {
@@ -44,6 +72,13 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
         val text: String,
         val textColor: BduiColor,
         val placeholderText: String,
@@ -54,6 +89,7 @@ sealed interface BduiComponentUi {
 
     @Immutable
     sealed interface Container : BduiComponentUi {
+
         val children: List<BduiComponentUi>
     }
 
@@ -61,7 +97,14 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
         override val children: List<BduiComponentUi>,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.COLUMN
     }
@@ -70,7 +113,14 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
         override val children: List<BduiComponentUi>,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.ROW
     }
@@ -79,7 +129,14 @@ sealed interface BduiComponentUi {
         override val id: String,
         override val hash: String,
         override val interactions: BduiComponentInteractionsUi?,
+        override val paddings: BduiComponentInsetsUi?,
+        override val margins: BduiComponentInsetsUi?,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor?,
         override val children: List<BduiComponentUi>,
+        override val border: BduiBorder?,
+        override val shape: BduiShape?,
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.BOX
     }
@@ -89,6 +146,35 @@ data class BduiColor(val value: Color) {
     companion object {
         val Default = BduiColor(Color.Red)
     }
+}
+
+data class BduiBorder(
+    val color: BduiColor,
+    val thickness: Int,
+)
+
+sealed interface BduiShape {
+
+    data class RoundedCorners(
+        val topStart: Int,
+        val topEnd: Int,
+        val bottomStart: Int,
+        val bottomEnd: Int,
+    ) : BduiShape
+}
+
+data class BduiComponentInsetsUi(
+    val start: Int,
+    val end: Int,
+    val top: Int,
+    val bottom: Int,
+)
+
+sealed interface BduiComponentSize {
+    data class Fixed(val value: Int) : BduiComponentSize
+    data class Weighted(val fraction: Float) : BduiComponentSize
+    data object MatchParent : BduiComponentSize
+    data object WrapContent : BduiComponentSize
 }
 
 @Immutable

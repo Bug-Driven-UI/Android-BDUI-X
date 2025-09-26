@@ -1,5 +1,3 @@
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,38 +5,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.dagger.hilt)
-    alias(libs.plugins.openapi.generator)
-}
-
-val openApiSpec = "$rootDir/specs/api.yaml"
-val modelsOut = layout.buildDirectory.dir("openapi/models")
-
-tasks.register<GenerateTask>("generateOpenApiModels") {
-    generatorName.set("kotlin")
-    inputSpec.set(openApiSpec)
-    outputDir.set(modelsOut.map { it.asFile.absolutePath })
-
-    globalProperties.set(
-        mapOf(
-            "models" to "",
-            "apis" to "false",
-            "supportingFiles" to "false",
-            "modelDocs" to "false",
-            "modelTests" to "false",
-        )
-    )
-
-    modelPackage.set("ru.bugdrivenui.bduix.data")
-
-    library.set("jvm-retrofit2")
-    configOptions.set(
-        mapOf(
-            "serializationLibrary" to "kotlinx_serialization"
-        )
-    )
-
-    inputs.file(file(openApiSpec))
-    outputs.dir(modelsOut)
 }
 
 android {
@@ -78,14 +44,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-
-    sourceSets.named("main") {
-        java.srcDir(modelsOut.map { it.dir("src/main/kotlin") })
-    }
-
-    tasks.named("preBuild").configure {
-        dependsOn("generateOpenApiModels")
     }
 }
 

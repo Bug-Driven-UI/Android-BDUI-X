@@ -1,7 +1,10 @@
 package ru.bugdrivenui.bduix.presentation.screen.compose
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -15,6 +18,8 @@ import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
 import ru.bugdrivenui.bduix.presentation.screen.viewmodel.BduiScreenViewModel
+import ru.bugdrivenui.bduix.utils.bduiBaseProperties
+import ru.bugdrivenui.bduix.utils.bduiPadding
 
 @Composable
 fun BduiScreen(
@@ -54,12 +59,37 @@ private fun BduiScreenContent(
     model: BduiScreenUiModel,
     onAction: (BduiActionUi) -> Unit,
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.statusBars),
+    ) {
         items(model.components) { component ->
-            BduiComponent(
-                component = component,
-                onAction = onAction,
-            )
+            Box(
+                modifier = Modifier.bduiPadding(component.margins),
+            ) {
+                BduiComponent(
+                    modifier = Modifier.bduiBaseProperties(component),
+                    component = component,
+                    onAction = onAction,
+                )
+            }
         }
     }
+//    Column {
+//        // paddings
+//        Text(
+//            modifier = Modifier
+//                .padding(16.dp)
+//                .background(Color.Red)
+//                .padding(16.dp),
+//            text = "some text",
+//        )
+//        // margins
+//        Text(
+//            modifier = Modifier
+//                .padding(16.dp)
+//                .background(Color.Red),
+//            text = "some text",
+//        )
+//    }
 }

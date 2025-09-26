@@ -14,8 +14,32 @@ data class BduiComponentResponse(
     val imageUrl: String?,
     val text: String?,
     val color: String?,
+    val backgroundColor: String?,
+    val paddings: BduiComponentInsets,
+    val margins: BduiComponentInsets,
+    val width: BduiComponentSizeResponse,
+    val height: BduiComponentSizeResponse,
     val interactions: List<BduiInteraction>?,
+    val border: BduiBorderResponse?,
+    val shape: BduiShapeResponse?,
 )
+
+data class BduiBorderResponse(
+    val color: String,
+    val thickness: Int,
+)
+
+data class BduiShapeResponse(
+    val type: BduiShapeType,
+    val topLeft: Int,
+    val topRight: Int,
+    val bottomLeft: Int,
+    val bottomRight: Int,
+)
+
+enum class BduiShapeType {
+    ROUNDED_CORNERS,
+}
 
 data class BduiInteraction(
     val type: BduiInteractionType,
@@ -29,6 +53,26 @@ data class BduiAction(
     val screenName: String?,
     val screenNavigationParams: Map<String, String>?,
 )
+
+data class BduiComponentInsets(
+    val start: Int,
+    val end: Int,
+    val top: Int,
+    val bottom: Int,
+)
+
+data class BduiComponentSizeResponse(
+    val type: BduiComponentSizeType,
+    val fraction: Float?,
+    val value: Int?,
+)
+
+enum class BduiComponentSizeType {
+    FIXED,
+    WEIGHTED,
+    MATCH_PARENT,
+    WRAP_CONTENT,
+}
 
 enum class BduiComponentType {
     TEXT,

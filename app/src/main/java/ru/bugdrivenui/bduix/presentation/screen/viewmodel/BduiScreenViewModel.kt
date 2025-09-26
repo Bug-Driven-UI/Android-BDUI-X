@@ -14,6 +14,7 @@ import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.screen.factory.BduiScreenFactory
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
+import ru.bugdrivenui.bduix.utils.MockScreens
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,6 +43,9 @@ class BduiScreenViewModel @Inject constructor(
                 when (state) {
                     State.Loading -> {
                         _uiState.update { UiState.Loading }
+
+                        // TODO LINES BELOW FOR TESTS ONLY
+                        _uiState.update { getTestUiState() }
                     }
                     is State.Error -> {
                         _uiState.update { UiState.Error }
@@ -70,4 +74,8 @@ class BduiScreenViewModel @Inject constructor(
     ) {
         // TODO
     }
+
+    private fun getTestUiState() = UiState.Content(
+        data = MockScreens.data.first(),
+    )
 }
