@@ -10,10 +10,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.bugdrivenui.bduix.domain.interactor.BduiInteractor
 import ru.bugdrivenui.bduix.domain.state.State
-import ru.bugdrivenui.bduix.presentation.common.UiState
+import ru.bugdrivenui.bduix.navigation.NavigationManager
 import ru.bugdrivenui.bduix.presentation.bdui_screen.factory.BduiScreenFactory
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiScreenUiModel
+import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.utils.MockScreens
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class BduiScreenViewModel @Inject constructor(
     private val bduiInteractor: BduiInteractor,
     private val screenFactory: BduiScreenFactory,
+    private val navigationManager: NavigationManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<BduiScreenUiModel>>(UiState.Loading)
@@ -34,6 +36,7 @@ class BduiScreenViewModel @Inject constructor(
         when (action) {
             is BduiActionUi.Command -> onCommand(action.name, action.params)
             is BduiActionUi.UpdateScreen -> onUpdateScreen(action.screenName, action.screenNavigationParams)
+            BduiActionUi.NavigateBack -> onNavigateBack()
         }
     }
 
@@ -78,4 +81,8 @@ class BduiScreenViewModel @Inject constructor(
     private fun getTestUiState() = UiState.Content(
         data = MockScreens.data.first(),
     )
+
+    private fun onNavigateBack() {
+        navigationManager.back()
+    }
 }
