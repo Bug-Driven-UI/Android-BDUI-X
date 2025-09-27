@@ -1,7 +1,5 @@
 package ru.bugdrivenui.bduix.presentation.screen.mapper
 
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import ru.bugdrivenui.bduix.data.model.BduiActionType
 import ru.bugdrivenui.bduix.data.model.BduiBorderResponse
 import ru.bugdrivenui.bduix.data.model.BduiComponentInsets
@@ -20,16 +18,11 @@ import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiShape
 import ru.bugdrivenui.bduix.utils.orZero
 
+
 fun String?.toBduiColor(
     fallbackColor: BduiColor = BduiColor.Default,
 ): BduiColor {
-    return this
-        ?.let {
-            runCatching { Color(it.toColorInt()) }
-                .map { parsed -> BduiColor(parsed) }
-                .getOrElse { fallbackColor }
-        }
-        ?: fallbackColor
+    return BduiColor(token = this ?: fallbackColor.token)
 }
 
 fun BduiBorderResponse?.toBduiBorder(): BduiBorder? {

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeColor
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInsetsUi
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
@@ -47,14 +48,14 @@ fun Modifier.bduiBaseProperties(component: BduiComponentUi): Modifier {
             .clip(shape)
             .ifNotNull(component.backgroundColor) { color ->
                 background(
-                    color = color.value,
+                    color = color.toComposeColor(),
                     shape = shape,
                 )
             }
             .ifNotNull(component.border) { border ->
                 border(
                     width = border.thickness.dp,
-                    color = border.color.value,
+                    color = border.color.toComposeColor(),
                     shape = shape,
                 )
             }

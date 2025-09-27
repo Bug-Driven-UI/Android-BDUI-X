@@ -15,10 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeColor
+import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeFontWeight
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.ui.theme.ManropeFont
 import ru.bugdrivenui.bduix.utils.getEnabledAlpha
@@ -31,7 +32,7 @@ fun BduiButtonComponent(
     BduiButtonComponent(
         modifier = modifier,
         text = component.text.value,
-        textColor = component.text.color.value,
+        textColor = component.text.color.toComposeColor(),
         fontSize = component.text.style.size,
         fontWeight = component.text.style.weight,
         enabled = component.enabled,
@@ -64,7 +65,7 @@ private fun BduiButtonComponent(
                 alpha = getEnabledAlpha(enabled),
             ),
             fontSize = fontSize.sp,
-            fontWeight = FontWeight(fontWeight),
+            fontWeight = fontWeight.toComposeFontWeight(),
             fontFamily = ManropeFont,
         )
     }

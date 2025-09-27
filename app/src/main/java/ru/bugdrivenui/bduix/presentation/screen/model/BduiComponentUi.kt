@@ -1,7 +1,6 @@
 package ru.bugdrivenui.bduix.presentation.screen.model
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
 
 @Immutable
 sealed interface BduiComponentUi {
@@ -29,8 +28,7 @@ sealed interface BduiComponentUi {
         override val backgroundColor: BduiColor?,
         override val border: BduiBorder?,
         override val shape: BduiShape?,
-        val text: String,
-        val textColor: BduiColor,
+        val text: BduiText,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.TEXT
     }
@@ -79,10 +77,9 @@ sealed interface BduiComponentUi {
         override val backgroundColor: BduiColor?,
         override val border: BduiBorder?,
         override val shape: BduiShape?,
-        val text: String,
-        val textColor: BduiColor,
-        val placeholderText: String,
-        val placeholderTextColor: BduiColor,
+        val text: BduiText,
+        val placeholder: BduiText,
+        val hint: BduiText,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.INPUT
     }
@@ -154,9 +151,9 @@ data class BduiTextStyle(
     val size: Int,
 )
 
-data class BduiColor(val value: Color) {
+data class BduiColor(val token: String) {
     companion object {
-        val Default = BduiColor(Color.Red)
+        val Default = BduiColor("#FF0000")
     }
 }
 
@@ -231,10 +228,8 @@ enum class BduiActionTypeUi {
 
 enum class BduiTextDecorationType {
     REGULAR,
-    BOLD,
     ITALIC,
     UNDERLINE,
-    OVERLINE,
     STRIKETHROUGH,
     STRIKETHROUGH_RED,
 }

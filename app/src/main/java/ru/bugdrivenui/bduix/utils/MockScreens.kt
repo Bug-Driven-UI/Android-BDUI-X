@@ -1,7 +1,5 @@
 package ru.bugdrivenui.bduix.utils
 
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiColor
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiBorder
@@ -41,9 +39,16 @@ object MockScreens {
                             margins = null,
                             width = BduiComponentSize.WrapContent,
                             height = BduiComponentSize.WrapContent,
-                            backgroundColor = BduiColor(Color("#000000".toColorInt())),
-                            text = "column_text1",
-                            textColor = BduiColor.Default,
+                            text = BduiText(
+                                value = "column_text1",
+                                color = BduiColor.Default,
+                                style = BduiTextStyle(
+                                    decorationType = BduiTextDecorationType.REGULAR,
+                                    weight = 600,
+                                    size = 15,
+                                )
+                            ),
+                            backgroundColor = BduiColor("#000000"),
                             shape = null,
                             border = null,
                         ),
@@ -65,9 +70,16 @@ object MockScreens {
                             ),
                             width = BduiComponentSize.WrapContent,
                             height = BduiComponentSize.Fixed(100),
-                            backgroundColor = BduiColor(Color("#000000".toColorInt())),
-                            text = "column_text2",
-                            textColor = BduiColor.Default,
+                            backgroundColor = BduiColor("#000000"),
+                            text = BduiText(
+                                value = "column_text2",
+                                color = BduiColor.Default,
+                                style = BduiTextStyle(
+                                    decorationType = BduiTextDecorationType.REGULAR,
+                                    weight = 500,
+                                    size = 15,
+                                )
+                            ),
                             shape = BduiShape.RoundedCorners(
                                 topStart = 24,
                                 topEnd = 24,
@@ -87,14 +99,18 @@ object MockScreens {
                             margins = null,
                             width = BduiComponentSize.WrapContent,
                             height = BduiComponentSize.WrapContent,
-                            backgroundColor = BduiColor(Color("#000000".toColorInt())),
-                            text = "column_text3",
-                            textColor = BduiColor.Default,
-                            shape = null,
-                            border = BduiBorder(
-                                color = BduiColor.Default,
-                                thickness = 1,
+                            backgroundColor = BduiColor("#00FFFFFF"),
+                            text = BduiText(
+                                value = "column_text3",
+                                color = BduiColor("#000000"),
+                                style = BduiTextStyle(
+                                    decorationType = BduiTextDecorationType.STRIKETHROUGH,
+                                    weight = 500,
+                                    size = 15,
+                                )
                             ),
+                            shape = null,
+                            border = null,
                         ),
                         BduiComponentUi.Button(
                             id = "column_button_id1",
@@ -130,7 +146,7 @@ object MockScreens {
                                 color = "#FFFFFF".toBduiColor(),
                                 style = BduiTextStyle(
                                     decorationType = BduiTextDecorationType.REGULAR,
-                                    weight = 800,
+                                    weight = 500,
                                     size = 15,
                                 ),
                             ),

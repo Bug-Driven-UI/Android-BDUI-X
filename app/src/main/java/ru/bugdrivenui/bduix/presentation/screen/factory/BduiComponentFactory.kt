@@ -9,6 +9,9 @@ import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiShape
 import ru.bugdrivenui.bduix.presentation.screen.mapper.toComponentInsets
 import ru.bugdrivenui.bduix.presentation.screen.mapper.toComponentSize
 import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.screen.model.BduiText
+import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextDecorationType
+import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextStyle
 import javax.inject.Inject
 
 class BduiComponentFactory @Inject constructor() {
@@ -39,8 +42,15 @@ class BduiComponentFactory @Inject constructor() {
             width = component.width.toComponentSize(),
             height = component.height.toComponentSize(),
             backgroundColor = component.backgroundColor.toBduiColor(),
-            text = component.text.orEmpty(),
-            textColor = component.color.toBduiColor(),
+            text = BduiText(
+                value = component.text.orEmpty(),
+                color = component.color.toBduiColor(),
+                style = BduiTextStyle(
+                    decorationType = BduiTextDecorationType.REGULAR,
+                    weight = 600,
+                    size = 15,
+                )
+            ),
             border = component.border.toBduiBorder(),
             shape = component.shape.toBduiShape(),
         )
