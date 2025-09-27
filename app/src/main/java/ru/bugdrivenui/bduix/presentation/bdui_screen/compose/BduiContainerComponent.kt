@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.compose
+package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,9 +12,9 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.utils.bduiBaseProperties
 import ru.bugdrivenui.bduix.utils.ifNotNull
 

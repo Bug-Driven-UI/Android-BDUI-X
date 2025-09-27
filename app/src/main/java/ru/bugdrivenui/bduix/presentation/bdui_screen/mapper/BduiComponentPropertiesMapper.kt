@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.mapper
+package ru.bugdrivenui.bduix.presentation.bdui_screen.mapper
 
 import ru.bugdrivenui.bduix.data.model.BduiActionType
 import ru.bugdrivenui.bduix.data.model.BduiBorderResponse
@@ -9,13 +9,13 @@ import ru.bugdrivenui.bduix.data.model.BduiInteraction
 import ru.bugdrivenui.bduix.data.model.BduiInteractionType
 import ru.bugdrivenui.bduix.data.model.BduiShapeResponse
 import ru.bugdrivenui.bduix.data.model.BduiShapeType
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiBorder
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiColor
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInsetsUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInteractionsUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiShape
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiBorder
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInteractionsUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiShape
 import ru.bugdrivenui.bduix.utils.orZero
 
 

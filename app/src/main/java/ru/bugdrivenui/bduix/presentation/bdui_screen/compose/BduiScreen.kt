@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.compose
+package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,10 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import ru.bugdrivenui.bduix.presentation.common.UiState
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
-import ru.bugdrivenui.bduix.presentation.screen.viewmodel.BduiScreenViewModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiScreenUiModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel.BduiScreenViewModel
 import ru.bugdrivenui.bduix.utils.bduiBaseProperties
 import ru.bugdrivenui.bduix.utils.ifNotNull
 

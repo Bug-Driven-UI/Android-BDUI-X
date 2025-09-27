@@ -1,7 +1,7 @@
-package ru.bugdrivenui.bduix.presentation.screen.factory
+package ru.bugdrivenui.bduix.presentation.bdui_screen.factory
 
 import ru.bugdrivenui.bduix.data.model.BduiScreenResponse
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiScreenUiModel
 import javax.inject.Inject
 
 class BduiScreenFactory @Inject constructor(

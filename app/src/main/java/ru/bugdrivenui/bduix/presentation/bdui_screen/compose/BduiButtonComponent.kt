@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.compose
+package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,9 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeColor
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeFontWeight
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeFontWeight
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.ui.theme.ManropeFont
 import ru.bugdrivenui.bduix.utils.getEnabledAlpha
 

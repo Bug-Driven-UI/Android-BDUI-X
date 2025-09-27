@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.viewmodel
+package ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import ru.bugdrivenui.bduix.domain.interactor.BduiInteractor
 import ru.bugdrivenui.bduix.domain.state.State
 import ru.bugdrivenui.bduix.presentation.common.UiState
-import ru.bugdrivenui.bduix.presentation.screen.factory.BduiScreenFactory
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.factory.BduiScreenFactory
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiScreenUiModel
 import ru.bugdrivenui.bduix.utils.MockScreens
 import javax.inject.Inject
 

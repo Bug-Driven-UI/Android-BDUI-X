@@ -1,18 +1,18 @@
 package ru.bugdrivenui.bduix.utils
 
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiColor
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiBorder
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiColor
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInsetsUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInteractionsUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiScreenUiModel
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiShape
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiText
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextDecorationType
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextStyle
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiBorder
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInteractionsUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiScreenUiModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiShape
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextStyle
 
 object MockScreens {
 

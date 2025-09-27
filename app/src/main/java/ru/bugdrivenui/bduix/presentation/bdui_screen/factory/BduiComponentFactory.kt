@@ -1,17 +1,17 @@
-package ru.bugdrivenui.bduix.presentation.screen.factory
+package ru.bugdrivenui.bduix.presentation.bdui_screen.factory
 
 import ru.bugdrivenui.bduix.data.model.BduiComponentResponse
 import ru.bugdrivenui.bduix.data.model.BduiComponentType
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiBorder
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiColor
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiInteractions
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toBduiShape
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComponentInsets
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComponentSize
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiText
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextDecorationType
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextStyle
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiBorder
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiInteractions
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiShape
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentInsets
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextStyle
 import javax.inject.Inject
 
 class BduiComponentFactory @Inject constructor() {

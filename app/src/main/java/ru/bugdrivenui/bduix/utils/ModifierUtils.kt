@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeColor
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentInsetsUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentSize
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiShape
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiShape
 
 inline fun <T : Any> Modifier.ifNotNull(
     value: T?,

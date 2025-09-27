@@ -1,9 +1,9 @@
-package ru.bugdrivenui.bduix.presentation.screen.compose
+package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiActionUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 
 @Composable
 fun BduiComponent(

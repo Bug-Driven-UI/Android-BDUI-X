@@ -1,9 +1,9 @@
-package ru.bugdrivenui.bduix.presentation.screen.mapper
+package ru.bugdrivenui.bduix.presentation.bdui_screen.mapper
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.graphics.toColorInt
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
 
 fun BduiColor.toComposeColor(fallbackColor: BduiColor = BduiColor.Default): Color {
     return runCatching { Color(this.token.toColorInt()) }

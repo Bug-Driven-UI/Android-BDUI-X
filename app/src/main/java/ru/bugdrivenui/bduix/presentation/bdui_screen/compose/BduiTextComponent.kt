@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.compose
+package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -6,10 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeColor
-import ru.bugdrivenui.bduix.presentation.screen.mapper.toComposeFontWeight
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.screen.model.BduiTextDecorationType
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeFontWeight
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
 import ru.bugdrivenui.bduix.presentation.ui.theme.ManropeFont
 
 @Composable

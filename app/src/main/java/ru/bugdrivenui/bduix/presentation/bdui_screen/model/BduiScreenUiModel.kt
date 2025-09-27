@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.presentation.screen.model
+package ru.bugdrivenui.bduix.presentation.bdui_screen.model
 
 import androidx.compose.runtime.Immutable
 
