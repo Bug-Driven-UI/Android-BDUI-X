@@ -48,14 +48,18 @@ fun BduiComponent(
             )
         }
 
-        is BduiComponentUi.Spacer -> BduiSpacerComponent(
-            modifier = modifier,
-            component = component,
-        )
+        is BduiComponentUi.Spacer -> {
+            BduiSpacerComponent(
+                modifier = modifier,
+                component = component,
+            )
+        }
 
-        is BduiComponentUi.Loader -> BduiLoaderComponent(
-            modifier = modifier,
-            component = component,
-        )
+        is BduiComponentUi.Loader -> {
+            BduiLoaderComponent(
+                modifier = modifier,
+                component = component,
+            )
+        }
     }
 }

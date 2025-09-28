@@ -1,65 +1,36 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.model
 
 import androidx.compose.runtime.Immutable
+import kotlinx.serialization.json.JsonElement
+import ru.bugdrivenui.bduix.presentation.utils.PresentationConstants.DEFAULT_BG_COLOR_HEX
+
+data class BduiScaffoldUi(
+    val topBar: BduiComponentUi?,
+    val bottomBar: BduiComponentUi?,
+)
 
 @Immutable
 sealed interface BduiComponentUi {
 
-    val id: String
-    val hash: String
+    val baseProperties: BaseProperties
     val type: BduiComponentTypeUi
-    val interactions: BduiComponentInteractionsUi?
-    val paddings: BduiComponentInsetsUi?
-    val margins: BduiComponentInsetsUi?
-    val width: BduiComponentSize
-    val height: BduiComponentSize
-    val backgroundColor: BduiColor?
-    val border: BduiBorder?
-    val shape: BduiShape?
 
     data class Text(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
+        override val baseProperties: BaseProperties,
         val text: BduiText,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.TEXT
     }
 
     data class Image(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
+        override val baseProperties: BaseProperties,
         val imageUrl: String,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.IMAGE
     }
 
     data class Button(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
+        override val baseProperties: BaseProperties,
         val text: BduiText,
         val enabled: Boolean,
     ) : BduiComponentUi {
@@ -67,19 +38,16 @@ sealed interface BduiComponentUi {
     }
 
     data class Input(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
+        override val baseProperties: BaseProperties,
         val text: BduiText,
-        val placeholder: BduiText,
-        val hint: BduiText,
+        val placeholder: BduiText?,
+        val hint: BduiText?,
+    ) : BduiComponentUi {
+        override val type: BduiComponentTypeUi = BduiComponentTypeUi.INPUT
+    }
+
+    data class Spacer(
+        override val baseProperties: BaseProperties,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.INPUT
     }
@@ -91,83 +59,38 @@ sealed interface BduiComponentUi {
     }
 
     data class Column(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
+        override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.COLUMN
     }
 
     data class Row(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
+        override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.ROW
     }
 
     data class Box(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi?,
-        override val paddings: BduiComponentInsetsUi?,
-        override val margins: BduiComponentInsetsUi?,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor?,
+        override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
-        override val border: BduiBorder?,
-        override val shape: BduiShape?,
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.BOX
     }
 
-    data class Spacer(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi? = null,
-        override val paddings: BduiComponentInsetsUi? = null,
-        override val margins: BduiComponentInsetsUi? = null,
-        override val width: BduiComponentSize,
-        override val height: BduiComponentSize,
-        override val backgroundColor: BduiColor? = null,
-        override val border: BduiBorder? = null,
-        override val shape: BduiShape? = null,
-    ) : BduiComponentUi {
-        override val type: BduiComponentTypeUi = BduiComponentTypeUi.SPACER
-    }
-    data class Loader(
-        override val id: String,
-        override val hash: String,
-        override val interactions: BduiComponentInteractionsUi? = null,
-        override val paddings: BduiComponentInsetsUi? = null,
-        override val margins: BduiComponentInsetsUi? = null,
-        override val width: BduiComponentSize = BduiComponentSize.Fixed(32),
-        override val height: BduiComponentSize = BduiComponentSize.Fixed(32),
-        override val backgroundColor: BduiColor? = null,
-        override val border: BduiBorder? = null,
-        override val shape: BduiShape? = null,
-        val color: BduiColor? = null,
-        val strokeDp: Int = 4,
-    ) : BduiComponentUi {
-        override val type: BduiComponentTypeUi = BduiComponentTypeUi.LOADER
-    }
+    data class BaseProperties(
+        val id: String,
+        val hash: String,
+        val interactions: BduiComponentInteractionsUi?,
+        val paddings: BduiComponentInsetsUi?,
+        val margins: BduiComponentInsetsUi?,
+        val width: BduiComponentSize,
+        val height: BduiComponentSize,
+        val backgroundColor: BduiColor?,
+        val border: BduiBorder?,
+        val shape: BduiShape?,
+    )
 }
 
 data class BduiText(
@@ -182,9 +105,9 @@ data class BduiTextStyle(
     val size: Int,
 )
 
-data class BduiColor(val token: String) {
+data class BduiColor(val hex: String) {
     companion object {
-        val Default = BduiColor("#FF0000")
+        val Default = BduiColor(DEFAULT_BG_COLOR_HEX)
     }
 }
 
@@ -228,12 +151,12 @@ sealed interface BduiActionUi {
 
     data class Command(
         val name: String,
-        val params: Map<String, String>?,
+        val params: Map<String, JsonElement>?,
     ) : BduiActionUi
 
     data class UpdateScreen(
         val screenName: String,
-        val screenNavigationParams: Map<String, String>?,
+        val screenNavigationParams: Map<String, JsonElement>?,
     ) : BduiActionUi
 
     data object NavigateBack : BduiActionUi
@@ -249,16 +172,6 @@ enum class BduiComponentTypeUi {
     BOX,
     SPACER,
     LOADER,
-}
-
-enum class BduiInteractionTypeUi {
-    ON_CLICK,
-    ON_SHOW,
-}
-
-enum class BduiActionTypeUi {
-    COMMAND,
-    UPDATE_SCREEN,
 }
 
 enum class BduiTextDecorationType {

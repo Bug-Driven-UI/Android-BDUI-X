@@ -23,8 +23,8 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
 
 fun BduiColor.toComposeColor(fallbackColor: BduiColor = BduiColor.Default): Color {
-    return runCatching { Color(this.token.toColorInt()) }
-        .getOrElse { Color(fallbackColor.token.toColorInt()) }
+    return runCatching { Color(this.hex.toColorInt()) }
+        .getOrElse { Color(fallbackColor.hex.toColorInt()) }
 }
 
 fun Int.toComposeFontWeight(): FontWeight {
