@@ -39,12 +39,6 @@ fun Int.toComposeFontWeight(): FontWeight {
         else -> FontWeight.Normal
     }
 }
-fun BduiShape?.asComposeShape(): Shape = when (this) {
-    is BduiShape.RoundedCorners -> androidx.compose.foundation.shape.RoundedCornerShape(
-        topStart.dp, topEnd.dp, bottomStart.dp, bottomEnd.dp
-    )
-    null -> RectangleShape
-}
 
 fun BduiText.toComposeTextStyle(): TextStyle {
     val weight = when (style.weight) {
@@ -65,21 +59,3 @@ fun BduiText.toComposeTextStyle(): TextStyle {
     )
 }
 
-fun BduiComponentInsetsUi?.asPaddingValues(): PaddingValues {
-    if (this == null) return PaddingValues()
-    return PaddingValues(start.dp, top.dp, end.dp, bottom.dp)
-}
-
-fun Modifier.applyWidthSize(size: BduiComponentSize): Modifier = when (size) {
-    is BduiComponentSize.Fixed -> width(size.value.dp)
-    is BduiComponentSize.Weighted -> this
-    BduiComponentSize.MatchParent -> fillMaxWidth()
-    BduiComponentSize.WrapContent -> this
-}
-
-fun Modifier.applyHeightSize(size: BduiComponentSize): Modifier = when (size) {
-    is BduiComponentSize.Fixed -> height(size.value.dp)
-    is BduiComponentSize.Weighted -> this
-    BduiComponentSize.MatchParent -> fillMaxHeight()
-    BduiComponentSize.WrapContent -> this
-}

@@ -2,29 +2,29 @@ package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.LayoutDirection
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.applyHeightSize
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.applyWidthSize
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.asPaddingValues
+import androidx.compose.ui.unit.dp
+
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeTextStyle
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiBorder
@@ -38,69 +38,58 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationTyp
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextStyle
 
 @Composable
-fun BduiInputComponent(
+fun BduiInputField(
     modifier: Modifier = Modifier,
     component: BduiComponentUi.Input,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     enabled: Boolean = true,
     singleLine: Boolean = true,
-    onValueChanged: ((String) -> Unit)? = null,
+    showClearButton: Boolean = true,
+    onClear: (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
-    val paddings = component.paddings.asPaddingValues()
-    var textState by rememberSaveable(component.id, stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(component.text.value))
-    }
+    val textStyle = component.text.toComposeTextStyle()
+    val placeholderStyle = component.placeholder
+        .toComposeTextStyle()
+        .copy(color = component.placeholder.color.toComposeColor().copy(alpha = 0.5f))
+
+    val contentModifier = modifier
+        .defaultMinSize(minHeight = 48.dp)
 
     BasicTextField(
-        value = textState,
-        onValueChange = {
-            textState = it
-            onValueChanged?.invoke(it.text)
-        },
+        value = value,
+        onValueChange = { onValueChange(it) },
         enabled = enabled,
         singleLine = singleLine,
-        textStyle = component.text.toComposeTextStyle(),
-        visualTransformation = VisualTransformation.None,
-        modifier = modifier
-            .applyWidthSize(component.width)
-            .applyHeightSize(component.height)
-            .defaultMinSize(minHeight = 48.dp)
-            .padding(
-                start = paddings.calculateLeftPadding(LayoutDirection.Ltr),
-                top = paddings.calculateTopPadding(),
-                end = paddings.calculateRightPadding(LayoutDirection.Rtl),
-                bottom = paddings.calculateBottomPadding(),
-            ),
+        textStyle = textStyle.merge(LocalTextStyle.current),
+        visualTransformation = visualTransformation,
+        modifier = contentModifier,
         decorationBox = { inner ->
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(Modifier.weight(1f)) {
-                    if (textState.text.isEmpty()) {
+                Box(modifier = Modifier.weight(1f)) {
+                    if (value.text.isEmpty()) {
                         Text(
                             text = component.placeholder.value,
-                            style = component.placeholder.toComposeTextStyle()
-                                .copy(
-                                    color = component.placeholder.color.toComposeColor()
-                                        .copy(alpha = 0.5f)
-                                )
+                            style = placeholderStyle
                         )
                     }
                     inner()
                 }
-                if (textState.text.isNotEmpty()) {
+                if (showClearButton && value.text.isNotEmpty()) {
                     Text(
                         text = "✕",
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .size(28.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                textState = TextFieldValue("")
-                                onValueChanged?.invoke("")
+                            .clickable(enabled = enabled) {
+                                onClear?.invoke()
                             }
                             .wrapContentSize(Alignment.Center),
-                        style = component.text.toComposeTextStyle()
+                        style = textStyle
                     )
                 }
             }
@@ -108,6 +97,47 @@ fun BduiInputComponent(
     )
 }
 
+@Composable
+fun BduiInputComponent(
+    modifier: Modifier = Modifier,
+    component: BduiComponentUi.Input,
+    enabled: Boolean = true,
+    singleLine: Boolean = true,
+    showClearButton: Boolean = true,
+    onValueChanged: ((String) -> Unit)? = null,
+) {
+    val externalInitial = component.text.value
+    var fieldValue by rememberSaveable(component.id, stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(externalInitial))
+    }
+
+    LaunchedEffect(component.text.value) {
+        val external = component.text.value
+        if (external != fieldValue.text) {
+            fieldValue = TextFieldValue(
+                text = external,
+                selection = TextRange(external.length)
+            )
+        }
+    }
+
+    BduiInputField(
+        modifier = modifier,
+        component = component,
+        value = fieldValue,
+        onValueChange = {
+            fieldValue = it
+            onValueChanged?.invoke(it.text)
+        },
+        enabled = enabled,
+        singleLine = singleLine,
+        showClearButton = showClearButton,
+        onClear = {
+            fieldValue = TextFieldValue("")
+            onValueChanged?.invoke("")
+        }
+    )
+}
 
 @Preview(showBackground = true, backgroundColor = 0xFF141414)
 @Composable

@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.create
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import ru.bugdrivenui.bduix.data.DataConstants.APPLICATION_JSON
 import ru.bugdrivenui.bduix.data.DataConstants.BASE_URL
@@ -65,6 +66,33 @@ abstract class BduixModule {
 
         @Singleton
         @Provides
+        fun provideJson(): Json = json()
+
+        private fun retrofit(
+            baseUrl: String,
+            okHttpClient: OkHttpClient,
+            json: Json,
+        ): Retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory(APPLICATION_JSON.toMediaType()))
+            .build()
+
+        private fun okHttpClient(): OkHttpClient {
+            return OkHttpClient.Builder().apply {
+                connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            }.build()
+        }
+
+        private fun json() = Json {
+            ignoreUnknownKeys = true
+            prettyPrint = true
+        }
+
+        @Singleton
+        @Provides
         fun provideImageLoader(
             @ApplicationContext context: Context,
             okHttpClient: OkHttpClient,
@@ -86,6 +114,7 @@ abstract class BduixModule {
                 .respectCacheHeaders(true)
                 .build()
     }
+
 
     @Binds
     abstract fun bindTestRepository(impl: TestRepository): ITestRepository
