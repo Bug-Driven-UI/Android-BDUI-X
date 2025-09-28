@@ -31,6 +31,14 @@ object MockScreens {
                     height = BduiComponentSize.WrapContent,
                     backgroundColor = null,
                     children = listOf(
+                        //Spacer
+                        BduiComponentUi.Spacer(
+                            id = "column_spacer_id_1",
+                            hash = "column_spacer_hash_1",
+                            width = BduiComponentSize.MatchParent,
+                            height = BduiComponentSize.Fixed(100),
+                        ),
+                        // Text 1
                         BduiComponentUi.Text(
                             id = "column_text_id1",
                             hash = "column_text_hash1",
@@ -52,6 +60,7 @@ object MockScreens {
                             shape = null,
                             border = null,
                         ),
+                        // Text 2
                         BduiComponentUi.Text(
                             id = "column_text_id2",
                             hash = "column_text_hash2",
@@ -91,6 +100,34 @@ object MockScreens {
                                 thickness = 3,
                             ),
                         ),
+                        // Image 1
+                        BduiComponentUi.Image(
+                            id = "column_image_id1",
+                            hash = "column_image_hash1",
+                            interactions = null,
+                            paddings = null,
+                            margins = BduiComponentInsetsUi(
+                                start = 16,
+                                end = 16,
+                                top = 16,
+                                bottom = 8,
+                            ),
+                            width = BduiComponentSize.Fixed(200),
+                            height = BduiComponentSize.Fixed(200),
+                            backgroundColor = null,
+                            border = BduiBorder(
+                                color = BduiColor("#965EEB"),
+                                thickness = 1,
+                            ),
+                            shape = BduiShape.RoundedCorners(
+                                topStart = 16,
+                                topEnd = 16,
+                                bottomStart = 16,
+                                bottomEnd = 16,
+                            ),
+                            imageUrl = "https://i.ytimg.com/vi/ArbiGwbF90A/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgUyhHMA8=&rs=AOn4CLDRBiDu5SDbBkAWmCnYDOp371Q7lw",
+                        ),
+                        // Text 3
                         BduiComponentUi.Text(
                             id = "column_text_id3",
                             hash = "column_text_hash3",
@@ -112,6 +149,23 @@ object MockScreens {
                             shape = null,
                             border = null,
                         ),
+                        // Spacer
+                        BduiComponentUi.Spacer(
+                            id = "column_spacer_id_1",
+                            hash = "column_spacer_hash_1",
+                            width = BduiComponentSize.MatchParent,
+                            height = BduiComponentSize.Fixed(24),
+                        ),
+                        // Loader
+                        BduiComponentUi.Loader(
+                            id = "loader_1",
+                            hash = "loader_hash_1",
+                            width = BduiComponentSize.Fixed(40),
+                            height = BduiComponentSize.Fixed(40),
+                            color = BduiColor("#000000"),
+                            strokeDp = 4,
+                        ),
+                        // Button
                         BduiComponentUi.Button(
                             id = "column_button_id1",
                             hash = "column_button_hash1",
@@ -155,7 +209,67 @@ object MockScreens {
                     ),
                     border = null,
                     shape = null,
-                )
+                ),
+
+
+                // Input
+                BduiComponentUi.Input(
+                    id = "column_input_id1",
+                    hash = "column_input_hash1",
+                    interactions = null,
+                    paddings = BduiComponentInsetsUi(
+                        start = 16,
+                        end = 16,
+                        top = 12,
+                        bottom = 12,
+                    ),
+                    margins = BduiComponentInsetsUi(
+                        start = 16,
+                        end = 16,
+                        top = 16,
+                        bottom = 0,
+                    ),
+                    width = BduiComponentSize.MatchParent,
+                    height = BduiComponentSize.WrapContent,
+                    backgroundColor = BduiColor("#1A965EEB"),
+                    border = BduiBorder(
+                        color = BduiColor("#965EEB"),
+                        thickness = 2,
+                    ),
+                    shape = BduiShape.RoundedCorners(
+                        topStart = 12,
+                        topEnd = 12,
+                        bottomStart = 12,
+                        bottomEnd = 12,
+                    ),
+                    text = BduiText(
+                        value = "",
+                        color = BduiColor("#000000"),
+                        style = BduiTextStyle(
+                            decorationType = BduiTextDecorationType.REGULAR,
+                            weight = 400,
+                            size = 15,
+                        )
+                    ),
+                    placeholder = BduiText(
+                        value = "Введите текст",
+                        color = BduiColor("#000000"),
+                        style = BduiTextStyle(
+                            decorationType = BduiTextDecorationType.REGULAR,
+                            weight = 400,
+                            size = 15,
+                        )
+                    ),
+                    hint = BduiText(
+                        value = "Подсказка под полем",
+                        color = BduiColor("#965EEB"),
+                        style = BduiTextStyle(
+                            decorationType = BduiTextDecorationType.REGULAR,
+                            weight = 400,
+                            size = 13,
+                        )
+                    ),
+                ),
             )
         ),
         // end 1

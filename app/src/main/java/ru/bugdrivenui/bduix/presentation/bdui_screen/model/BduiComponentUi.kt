@@ -137,6 +137,37 @@ sealed interface BduiComponentUi {
     ) : Container {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.BOX
     }
+
+    data class Spacer(
+        override val id: String,
+        override val hash: String,
+        override val interactions: BduiComponentInteractionsUi? = null,
+        override val paddings: BduiComponentInsetsUi? = null,
+        override val margins: BduiComponentInsetsUi? = null,
+        override val width: BduiComponentSize,
+        override val height: BduiComponentSize,
+        override val backgroundColor: BduiColor? = null,
+        override val border: BduiBorder? = null,
+        override val shape: BduiShape? = null,
+    ) : BduiComponentUi {
+        override val type: BduiComponentTypeUi = BduiComponentTypeUi.SPACER
+    }
+    data class Loader(
+        override val id: String,
+        override val hash: String,
+        override val interactions: BduiComponentInteractionsUi? = null,
+        override val paddings: BduiComponentInsetsUi? = null,
+        override val margins: BduiComponentInsetsUi? = null,
+        override val width: BduiComponentSize = BduiComponentSize.Fixed(32),
+        override val height: BduiComponentSize = BduiComponentSize.Fixed(32),
+        override val backgroundColor: BduiColor? = null,
+        override val border: BduiBorder? = null,
+        override val shape: BduiShape? = null,
+        val color: BduiColor? = null,
+        val strokeDp: Int = 4,
+    ) : BduiComponentUi {
+        override val type: BduiComponentTypeUi = BduiComponentTypeUi.LOADER
+    }
 }
 
 data class BduiText(
@@ -214,6 +245,8 @@ enum class BduiComponentTypeUi {
     ROW,
     COLUMN,
     BOX,
+    SPACER,
+    LOADER,
 }
 
 enum class BduiInteractionTypeUi {

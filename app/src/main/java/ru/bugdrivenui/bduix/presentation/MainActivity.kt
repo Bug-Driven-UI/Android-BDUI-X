@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import ru.bugdrivenui.bduix.presentation.screen.compose.BduiScreen
-import ru.bugdrivenui.bduix.presentation.screen.viewmodel.BduiScreenViewModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.compose.BduiScreen
+import ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel.BduiScreenViewModel
+
 import ru.bugdrivenui.bduix.presentation.ui.theme.BduixTheme
 
 @AndroidEntryPoint
