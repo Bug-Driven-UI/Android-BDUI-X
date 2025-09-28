@@ -1,5 +1,6 @@
 package ru.bugdrivenui.bduix.data.utils
 
+import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -16,6 +17,7 @@ suspend fun <T : Any> apiCall(
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
+        Log.d("apiCall", e.toString())
         Result.Error(e)
     }
 }
@@ -25,6 +27,7 @@ fun <T> Response<T>.toResult(): Result<T> {
     return if (isSuccessful && body != null) {
         Result.Success(body)
     } else {
+        Log.d("apiCall", "isSuccessful=$isSuccessful, body=$body")
         Result.Error()
     }
 }

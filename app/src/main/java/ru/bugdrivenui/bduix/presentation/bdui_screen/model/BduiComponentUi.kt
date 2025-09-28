@@ -235,6 +235,8 @@ sealed interface BduiActionUi {
         val screenName: String,
         val screenNavigationParams: Map<String, String>?,
     ) : BduiActionUi
+
+    data object NavigateBack : BduiActionUi
 }
 
 enum class BduiComponentTypeUi {

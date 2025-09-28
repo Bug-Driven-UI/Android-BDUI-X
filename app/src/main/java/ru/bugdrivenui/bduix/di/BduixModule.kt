@@ -15,7 +15,10 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
-import ru.bugdrivenui.bduix.data.DataConstants
+import ru.bugdrivenui.bduix.data.DataConstants.APPLICATION_JSON
+import ru.bugdrivenui.bduix.data.DataConstants.BASE_URL
+import ru.bugdrivenui.bduix.data.DataConstants.TIMEOUT_SECONDS
+import ru.bugdrivenui.bduix.data.api.BduiApi
 import ru.bugdrivenui.bduix.data.api.TestApi
 import ru.bugdrivenui.bduix.data.repository.BduiScreenRepository
 import ru.bugdrivenui.bduix.data.repository.TestRepository
@@ -31,24 +34,18 @@ abstract class BduixModule {
     @Binds
     abstract fun bindBduiScreenRepository(impl: BduiScreenRepository): IBduiScreenRepository
 
-    @Binds
-    abstract fun bindTestRepository(impl: TestRepository): ITestRepository
-
     companion object {
-        @Singleton
-        @Provides
-        fun provideOkHttpClient(): OkHttpClient =
-            OkHttpClient.Builder()
-                .connectTimeout(DataConstants.TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(DataConstants.TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .writeTimeout(DataConstants.TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .build()
 
         @Singleton
         @Provides
-        fun provideJson(): Json = Json {
-            ignoreUnknownKeys = true
-            prettyPrint = true
+        fun provideTestApi(retrofit: Retrofit): TestApi {
+            return retrofit.create<TestApi>()
+        }
+
+        @Singleton
+        @Provides
+        fun provideBduiApi(retrofit: Retrofit): BduiApi {
+            return retrofit.create<BduiApi>()
         }
 
         @Singleton
@@ -56,15 +53,15 @@ abstract class BduixModule {
         fun provideRetrofit(
             okHttpClient: OkHttpClient,
             json: Json,
-        ): Retrofit = Retrofit.Builder()
-            .baseUrl(DataConstants.BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(json.asConverterFactory(DataConstants.APPLICATION_JSON.toMediaType()))
-            .build()
+        ): Retrofit = retrofit(
+            baseUrl = BASE_URL,
+            okHttpClient = okHttpClient,
+            json = json,
+        )
 
         @Singleton
         @Provides
-        fun provideTestApi(retrofit: Retrofit): TestApi = retrofit.create(TestApi::class.java)
+        fun provideOkHttpClient(): OkHttpClient = okHttpClient()
 
         @Singleton
         @Provides
@@ -89,4 +86,7 @@ abstract class BduixModule {
                 .respectCacheHeaders(true)
                 .build()
     }
+
+    @Binds
+    abstract fun bindTestRepository(impl: TestRepository): ITestRepository
 }
