@@ -27,13 +27,35 @@ fun BduiComponent(
             )
         }
 
-        is BduiComponentUi.Image -> TODO()
-        is BduiComponentUi.Input -> TODO()
+        is BduiComponentUi.Image -> {
+            BduiImageComponent(
+                modifier = modifier,
+                component = component,
+            )
+        }
+
+        is BduiComponentUi.Input -> {
+            BduiInputComponent(
+                modifier = modifier,
+                component = component,
+            )
+        }
+
         is BduiComponentUi.Text -> {
             BduiTextComponent(
                 modifier = modifier,
                 component = component,
             )
         }
+
+        is BduiComponentUi.Spacer -> BduiSpacerComponent(
+            modifier = modifier,
+            component = component,
+        )
+
+        is BduiComponentUi.Loader -> BduiLoaderComponent(
+            modifier = modifier,
+            component = component,
+        )
     }
 }

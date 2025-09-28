@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.1"
+coilCompose = "2.7.0"
 kotlin = "2.0.21"
 kotlinCoroutines = "1.10.2"
 ksp = "2.0.21-1.0.27"
@@ -11,6 +12,7 @@ lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2025.09.01"
 daggerHilt = "2.51.1"
+loggingInterceptor = "5.1.0"
 navigationCompose = "2.9.5"
 retrofit = "2.10.0"
 okhttp = "4.12.0"
@@ -49,7 +51,7 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 kotlinx-serialization-json = { module="org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref="kotlinxSerialization" }
 kotlinx-serialization-converter = { module="com.squareup.retrofit2:converter-kotlinx-serialization", version.ref="kotlinxSerializationConverter" }
-
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
