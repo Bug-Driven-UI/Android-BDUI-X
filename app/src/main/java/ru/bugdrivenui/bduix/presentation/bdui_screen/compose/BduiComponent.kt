@@ -35,5 +35,7 @@ fun BduiComponent(
                 component = component,
             )
         }
+
+        is BduiComponentUi.Spacer -> TODO()
     }
 }

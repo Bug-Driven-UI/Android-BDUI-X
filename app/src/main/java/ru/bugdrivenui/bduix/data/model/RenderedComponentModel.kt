@@ -23,11 +23,11 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("row")
-    data class RenderedRowModel(
+    data class Row(
         @SerialName("children") val children: List<RenderedComponentModel>,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -39,11 +39,11 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("box")
-    data class RenderedBoxModel(
+    data class Box(
         @SerialName("children") val children: List<RenderedComponentModel>,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -55,11 +55,11 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("column")
-    data class RenderedColumnModel(
+    data class Column(
         @SerialName("children") val children: List<RenderedComponentModel>,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -71,11 +71,11 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("text")
-    data class RenderedTextModel(
+    data class Text(
         @SerialName("textWithStyle") val textWithStyle: RenderedStyledTextRepresentationModel,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -87,12 +87,12 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("image")
-    data class RenderedImageModel(
+    data class Image(
         @SerialName("imageUrl") val imageUrl: String,
         @SerialName("badge") val badge: RenderedBadgeModel,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -104,16 +104,16 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("input")
-    data class RenderedInputModel(
+    data class Input(
         @SerialName("textWithStyle") val textWithStyle: RenderedStyledTextRepresentationModel,
         @SerialName("mask") val mask: Mask?,
-        @SerialName("rightIcon") val rightIcon: RenderedImageModel?,
+        @SerialName("rightIcon") val rightIcon: Image?,
         @SerialName("regex") val regex: RenderedRegexModel?,
         @SerialName("placeholder") val placeholder: RenderedPlaceholderModel?,
         @SerialName("hint") val hint: RenderedHintModel?,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -131,25 +131,10 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("spacer")
-    data class RenderedSpacerModel(
+    data class Spacer(
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
-        @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
-        @SerialName("margins") override val margins: RenderedInsetsModel? = null,
-        @SerialName("width") override val width: RenderedSizeModel,
-        @SerialName("height") override val height: RenderedSizeModel,
-        @SerialName("backgroundColor") override val backgroundColor: RenderedColorStyleModel? = null,
-        @SerialName("border") override val border: RenderedBorderModel? = null,
-        @SerialName("shape") override val shape: RenderedShapeModel? = null,
-    ) : RenderedComponentModel
-
-    @Serializable
-    @SerialName("progressBar")
-    data class RenderedProgressBar(
-        @SerialName("id") override val id: String,
-        @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -161,10 +146,10 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("switch")
-    data class RenderedSwitch(
+    data class Switch(
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,
@@ -176,12 +161,12 @@ sealed interface RenderedComponentModel {
 
     @Serializable
     @SerialName("button")
-    data class RenderedButtonModel(
+    data class Button(
         @SerialName("textWithStyle") val textWithStyle: RenderedStyledTextRepresentationModel,
         @SerialName("enabled") val enabled: Boolean,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
-        @SerialName("interactions") override val interactions: List<RenderedInteractionModel>,
+        @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
         @SerialName("paddings") override val paddings: RenderedInsetsModel? = null,
         @SerialName("margins") override val margins: RenderedInsetsModel? = null,
         @SerialName("width") override val width: RenderedSizeModel,

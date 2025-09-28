@@ -1,16 +1,12 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
@@ -67,15 +63,11 @@ private fun BoxScope.BduiComponentWrapper(
 ) {
     BduiComponent(
         modifier = Modifier
-            .bduiBaseProperties(component)
-            .ifNotNull(component.interactions?.onClick) { onClickActions ->
-                clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = ripple(),
-                    enabled = (component as? BduiComponentUi.Button)?.enabled ?: true,
-                    onClick = { onClickActions.forEach { onAction(it) } },
-                )
-            },
+            .bduiBaseProperties(
+                component = component.baseProperties,
+                onAction = onAction,
+                buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
+            ),
         component = component,
         onAction = onAction,
     )
@@ -86,20 +78,16 @@ private fun ColumnScope.BduiComponentWrapper(
     component: BduiComponentUi,
     onAction: (BduiActionUi) -> Unit,
 ) {
-    val weightedHeight = (component.height as? BduiComponentSize.Weighted)?.fraction
+    val weightedHeight = (component.baseProperties.height as? BduiComponentSize.Weighted)?.fraction
 
     BduiComponent(
         modifier = Modifier
-            .bduiBaseProperties(component)
-            .ifNotNull(weightedHeight) { weight(it) }
-            .ifNotNull(component.interactions?.onClick) { onClickActions ->
-                clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = ripple(),
-                    enabled = (component as? BduiComponentUi.Button)?.enabled ?: true,
-                    onClick = { onClickActions.forEach { onAction(it) } },
-                )
-            },
+            .bduiBaseProperties(
+                component = component.baseProperties,
+                onAction = onAction,
+                buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
+            )
+            .ifNotNull(weightedHeight) { weight(it) },
         component = component,
         onAction = onAction,
     )
@@ -110,20 +98,16 @@ private fun RowScope.BduiComponentWrapper(
     component: BduiComponentUi,
     onAction: (BduiActionUi) -> Unit,
 ) {
-    val weightedWidth = (component.width as? BduiComponentSize.Weighted)?.fraction
+    val weightedWidth = (component.baseProperties.width as? BduiComponentSize.Weighted)?.fraction
 
     BduiComponent(
         modifier = Modifier
-            .bduiBaseProperties(component)
-            .ifNotNull(weightedWidth) { weight(it) }
-            .ifNotNull(component.interactions?.onClick) { onClickActions ->
-                clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = ripple(),
-                    enabled = (component as? BduiComponentUi.Button)?.enabled ?: true,
-                    onClick = { onClickActions.forEach { onAction(it) } },
-                )
-            },
+            .bduiBaseProperties(
+                component = component.baseProperties,
+                onAction = onAction,
+                buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
+            )
+            .ifNotNull(weightedWidth) { weight(it) },
         component = component,
         onAction = onAction,
     )

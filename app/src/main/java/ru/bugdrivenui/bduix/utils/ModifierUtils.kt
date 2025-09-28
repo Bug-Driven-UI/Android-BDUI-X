@@ -2,17 +2,23 @@ package ru.bugdrivenui.bduix.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ripple
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
@@ -24,7 +30,12 @@ inline fun <T : Any> Modifier.ifNotNull(
 ): Modifier =
     if (value != null) block(this, value) else this
 
-fun Modifier.bduiBaseProperties(component: BduiComponentUi): Modifier {
+@Composable
+fun Modifier.bduiBaseProperties(
+    component: BduiComponentUi.BaseProperties,
+    onAction: (BduiActionUi) -> Unit,
+    buttonEnabled: Boolean?,
+): Modifier {
     val componentShape = component.shape
     var shape = RectangleShape
     if (componentShape != null) {
@@ -57,6 +68,14 @@ fun Modifier.bduiBaseProperties(component: BduiComponentUi): Modifier {
                     width = border.thickness.dp,
                     color = border.color.toComposeColor(),
                     shape = shape,
+                )
+            }
+            .ifNotNull(component.interactions?.onClick) { onClickActions ->
+                clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = ripple(),
+                    enabled = buttonEnabled ?: true,
+                    onClick = { onClickActions.forEach { onAction(it) } },
                 )
             }
             .bduiPadding(component.paddings)
