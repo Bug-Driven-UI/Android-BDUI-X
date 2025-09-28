@@ -54,12 +54,5 @@ fun BduiComponent(
                 component = component,
             )
         }
-
-        is BduiComponentUi.Loader -> {
-            BduiLoaderComponent(
-                modifier = modifier,
-                component = component,
-            )
-        }
     }
 }

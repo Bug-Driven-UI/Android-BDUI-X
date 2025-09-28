@@ -22,6 +22,7 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel.BduiScreenViewModel
+import ru.bugdrivenui.bduix.presentation.common.LoaderScreen
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.utils.bduiBaseProperties
 
@@ -38,12 +39,7 @@ fun BduiScreen(
 
     when (uiState) {
         is UiState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text("Loading")
-            }
+            LoaderScreen()
         }
         is UiState.Error -> {
             Box(

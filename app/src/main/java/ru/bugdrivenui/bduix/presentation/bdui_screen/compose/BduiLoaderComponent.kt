@@ -12,19 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 
 @Composable
 fun BduiLoaderComponent(
-    modifier: Modifier,
-    component: BduiComponentUi.Loader,
+    modifier: Modifier = Modifier,
+    color: Color = Color.Black,
+    stroke: Dp = 3.dp,
 ) {
     val transition = rememberInfiniteTransition(label = "loader_rot")
     val angle by transition.animateFloat(
@@ -36,9 +36,8 @@ fun BduiLoaderComponent(
         label = "loader_angle"
     )
 
-    val color = (component.color ?: BduiColor("#99FFFFFF")).toComposeColor()
     val sweep = 360f * 0.75f
-    val strokeDp = component.strokeDp.dp
+    val strokeDp = stroke
     val density = LocalDensity.current
 
     Box(

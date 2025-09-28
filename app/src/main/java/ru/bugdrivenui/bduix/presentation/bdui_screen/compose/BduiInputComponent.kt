@@ -51,8 +51,8 @@ fun BduiInputField(
 ) {
     val textStyle = component.text.toComposeTextStyle()
     val placeholderStyle = component.placeholder
-        .toComposeTextStyle()
-        .copy(color = component.placeholder.color.toComposeColor().copy(alpha = 0.5f))
+        ?.toComposeTextStyle()
+        ?.copy(color = component.placeholder.color.toComposeColor().copy(alpha = 0.5f))
 
     val contentModifier = modifier
         .defaultMinSize(minHeight = 48.dp)
@@ -71,7 +71,7 @@ fun BduiInputField(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(modifier = Modifier.weight(1f)) {
-                    if (value.text.isEmpty()) {
+                    if (value.text.isEmpty() && placeholderStyle != null) {
                         Text(
                             text = component.placeholder.value,
                             style = placeholderStyle
@@ -107,7 +107,7 @@ fun BduiInputComponent(
     onValueChanged: ((String) -> Unit)? = null,
 ) {
     val externalInitial = component.text.value
-    var fieldValue by rememberSaveable(component.id, stateSaver = TextFieldValue.Saver) {
+    var fieldValue by rememberSaveable(component.baseProperties.id, stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(externalInitial))
     }
 
@@ -143,16 +143,18 @@ fun BduiInputComponent(
 @Composable
 private fun BduiInputComponent_Preview() {
     val component = BduiComponentUi.Input(
-        id = "preview_input",
-        hash = "preview_hash",
-        interactions = null,
-        paddings = BduiComponentInsetsUi(16, 12, 16, 12),
-        margins = null,
-        width = BduiComponentSize.Fixed(280),
-        height = BduiComponentSize.WrapContent,
-        backgroundColor = BduiColor("#1A965EEB"),
-        border = BduiBorder(BduiColor("#965EEB"), 2),
-        shape = BduiShape.RoundedCorners(12, 12, 12, 12),
+        baseProperties = BduiComponentUi.BaseProperties(
+            id = "preview_input",
+            hash = "preview_hash",
+            interactions = null,
+            paddings = BduiComponentInsetsUi(16, 12, 16, 12),
+            margins = null,
+            width = BduiComponentSize.Fixed(280),
+            height = BduiComponentSize.WrapContent,
+            backgroundColor = BduiColor("#1A965EEB"),
+            border = BduiBorder(BduiColor("#965EEB"), 2),
+            shape = BduiShape.RoundedCorners(12, 12, 12, 12),
+        ),
         text = BduiText(
             value = "",
             color = BduiColor("#FFFFFF"),

@@ -1,26 +1,16 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.mapper
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiShape
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
+import ru.bugdrivenui.bduix.presentation.ui.theme.ManropeFont
 
 fun BduiColor.toComposeColor(fallbackColor: BduiColor = BduiColor.Default): Color {
     return runCatching { Color(this.hex.toColorInt()) }
@@ -40,11 +30,9 @@ fun Int.toComposeFontWeight(): FontWeight {
     }
 }
 
+// TODO отрефакторить к единому тексту по всем компонентам
 fun BduiText.toComposeTextStyle(): TextStyle {
-    val weight = when (style.weight) {
-        in 100..900 -> FontWeight(style.weight)
-        else -> FontWeight.Normal
-    }
+    val weight = style.weight.toComposeFontWeight()
     val decoration = when (style.decorationType) {
         BduiTextDecorationType.UNDERLINE -> TextDecoration.Underline
         BduiTextDecorationType.STRIKETHROUGH,
@@ -53,9 +41,15 @@ fun BduiText.toComposeTextStyle(): TextStyle {
     }
     return TextStyle(
         fontSize = style.size.sp,
+        fontStyle = if (style.decorationType == BduiTextDecorationType.ITALIC) {
+            FontStyle.Italic
+        } else {
+            FontStyle.Normal
+        },
         fontWeight = weight,
         textDecoration = decoration,
-        color = color.toComposeColor()
+        color = color.toComposeColor(),
+        fontFamily = ManropeFont,
     )
 }
 
