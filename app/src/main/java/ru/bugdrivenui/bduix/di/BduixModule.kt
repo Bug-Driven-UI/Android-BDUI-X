@@ -14,6 +14,7 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import ru.bugdrivenui.bduix.data.DataConstants.APPLICATION_JSON
 import ru.bugdrivenui.bduix.data.DataConstants.BASE_URL
 import ru.bugdrivenui.bduix.data.DataConstants.TIMEOUT_SECONDS
+import ru.bugdrivenui.bduix.data.api.BduiApi
 import ru.bugdrivenui.bduix.data.api.TestApi
 import ru.bugdrivenui.bduix.data.repository.BduiScreenRepository
 import ru.bugdrivenui.bduix.data.repository.TestRepository
@@ -35,6 +36,12 @@ abstract class BduixModule {
         @Provides
         fun provideTestApi(retrofit: Retrofit): TestApi {
             return retrofit.create<TestApi>()
+        }
+
+        @Singleton
+        @Provides
+        fun provideBduiApi(retrofit: Retrofit): BduiApi {
+            return retrofit.create<BduiApi>()
         }
 
         @Singleton
