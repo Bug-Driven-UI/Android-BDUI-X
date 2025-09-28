@@ -36,17 +36,14 @@ fun Modifier.bduiBaseProperties(
     onAction: (BduiActionUi) -> Unit,
     buttonEnabled: Boolean?,
 ): Modifier {
-    val componentShape = component.shape
-    var shape = RectangleShape
-    if (componentShape != null) {
-        shape = when (componentShape) {
-            is BduiShape.RoundedCorners -> RoundedCornerShape(
-                topStart = componentShape.topStart.dp,
-                topEnd = componentShape.topEnd.dp,
-                bottomStart = componentShape.bottomStart.dp,
-                bottomEnd = componentShape.bottomEnd.dp,
-            )
-        }
+    val shape = when (component.shape) {
+        is BduiShape.RoundedCorners -> RoundedCornerShape(
+            topStart = component.shape.topStart.dp,
+            topEnd = component.shape.topEnd.dp,
+            bottomStart = component.shape.bottomStart.dp,
+            bottomEnd = component.shape.bottomEnd.dp,
+        )
+        null -> RectangleShape
     }
 
     return this.then(
