@@ -149,14 +149,20 @@ data class BduiComponentInteractionsUi(
 @Immutable
 sealed interface BduiActionUi {
 
+    sealed interface Remote
+
     data class Command(
         val name: String,
         val params: Map<String, JsonElement>?,
-    ) : BduiActionUi
+    ) : Remote
 
     data class UpdateScreen(
         val screenName: String,
         val screenNavigationParams: Map<String, JsonElement>?,
+    ) : Remote
+
+    data class SendRemoteActions(
+        val actions: List<Remote>,
     ) : BduiActionUi
 
     data object NavigateBack : BduiActionUi

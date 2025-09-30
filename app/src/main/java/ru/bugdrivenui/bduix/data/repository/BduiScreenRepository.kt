@@ -3,7 +3,9 @@ package ru.bugdrivenui.bduix.data.repository
 import kotlinx.coroutines.Dispatchers
 import ru.bugdrivenui.bduix.data.api.BduiApi
 import ru.bugdrivenui.bduix.data.model.RenderedScreenResponseModel
-import ru.bugdrivenui.bduix.data.model.ScreenRenderRequestModel
+import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionRequestModel
+import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionResponseModel
+import ru.bugdrivenui.bduix.data.model.render.ScreenRenderRequestModel
 import ru.bugdrivenui.bduix.data.utils.apiCall
 import ru.bugdrivenui.bduix.data.utils.toResult
 import ru.bugdrivenui.bduix.domain.repository.IBduiScreenRepository
@@ -25,6 +27,14 @@ class BduiScreenRepository @Inject constructor(
                 userId = userId,
                 request = request,
             ).toResult()
+        }
+    }
+
+    override suspend fun doAction(
+        request: ScreenDoActionRequestModel,
+    ): Result<ScreenDoActionResponseModel> {
+        return apiCall(Dispatchers.IO) {
+            bduiApi.doAction(request).toResult()
         }
     }
 }

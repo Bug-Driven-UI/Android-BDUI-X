@@ -7,4 +7,8 @@ object PresentationConstants {
 
     const val DEFAULT_BG_COLOR_HEX = TRANSPARENT_COLOR_HEX
     const val DEFAULT_TEXT_COLOR_HEX = BLACK_COLOR_HEX
+
+    const val PATH_SEPARATOR = "/"
+    const val PATH_SEPARATOR_CHAR = '/'
+    const val PATH_ROOT = PATH_SEPARATOR
 }

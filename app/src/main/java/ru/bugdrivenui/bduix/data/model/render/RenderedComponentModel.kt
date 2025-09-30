@@ -1,11 +1,22 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package ru.bugdrivenui.bduix.data.model
+package ru.bugdrivenui.bduix.data.model.render
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
+import ru.bugdrivenui.bduix.data.model.RenderedBadgeModel
+import ru.bugdrivenui.bduix.data.model.RenderedBorderModel
+import ru.bugdrivenui.bduix.data.model.RenderedColorStyleModel
+import ru.bugdrivenui.bduix.data.model.RenderedHintModel
+import ru.bugdrivenui.bduix.data.model.RenderedInsetsModel
+import ru.bugdrivenui.bduix.data.model.RenderedInteractionModel
+import ru.bugdrivenui.bduix.data.model.RenderedPlaceholderModel
+import ru.bugdrivenui.bduix.data.model.RenderedRegexModel
+import ru.bugdrivenui.bduix.data.model.RenderedShapeModel
+import ru.bugdrivenui.bduix.data.model.RenderedSizeModel
+import ru.bugdrivenui.bduix.data.model.RenderedStyledTextRepresentationModel
 
 @Serializable
 @JsonClassDiscriminator("type")

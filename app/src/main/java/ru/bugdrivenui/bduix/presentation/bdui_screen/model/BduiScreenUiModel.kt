@@ -8,4 +8,5 @@ data class RenderedScreenUi(
     val version: Int,
     val components: List<BduiComponentUi>,
     val scaffold: BduiScaffoldUi?,
+    val isLoading: Boolean = false,
 )

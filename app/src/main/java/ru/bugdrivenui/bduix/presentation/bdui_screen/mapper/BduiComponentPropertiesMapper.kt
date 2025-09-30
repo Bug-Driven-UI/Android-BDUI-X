@@ -49,22 +49,52 @@ fun List<RenderedInteractionModel>.toBduiInteractionActions(
 }
 
 fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
-    return this.actions.map { action ->
+    val actions = mutableListOf<BduiActionUi>()
+    val remoteActions = mutableListOf<BduiActionUi.Remote>()
+    this.actions.forEach { action ->
         when (action) {
+            // TODO navigate actions
             is RenderedActionModel.RenderedCommandActionModel -> {
-                BduiActionUi.Command(
-                    name = action.name,
-                    params = action.params,
+                remoteActions.add(
+                    BduiActionUi.Command(
+                        name = action.name,
+                        params = action.params,
+                    )
                 )
             }
+
             is RenderedActionModel.RenderedUpdateScreenActionModel -> {
-                BduiActionUi.UpdateScreen(
-                    screenName = action.screenName,
-                    screenNavigationParams = action.screenNavigationParams,
+                remoteActions.add(
+                    BduiActionUi.UpdateScreen(
+                        screenName = action.screenName,
+                        screenNavigationParams = action.screenNavigationParams,
+                    )
                 )
             }
         }
     }
+    actions.add(
+        BduiActionUi.SendRemoteActions(
+            actions = remoteActions,
+        )
+    )
+    return actions
+//    return this.actions.map { action ->
+//        when (action) {
+//            is RenderedActionModel.RenderedCommandActionModel -> {
+//                BduiActionUi.Command(
+//                    name = action.name,
+//                    params = action.params,
+//                )
+//            }
+//            is RenderedActionModel.RenderedUpdateScreenActionModel -> {
+//                BduiActionUi.UpdateScreen(
+//                    screenName = action.screenName,
+//                    screenNavigationParams = action.screenNavigationParams,
+//                )
+//            }
+//        }
+//    }
 }
 
 fun RenderedInsetsModel?.toComponentInsets(): BduiComponentInsetsUi {

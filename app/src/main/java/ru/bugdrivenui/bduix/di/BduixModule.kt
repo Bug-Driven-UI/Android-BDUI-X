@@ -14,17 +14,14 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.create
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.create
 import ru.bugdrivenui.bduix.data.DataConstants.APPLICATION_JSON
 import ru.bugdrivenui.bduix.data.DataConstants.BASE_URL
 import ru.bugdrivenui.bduix.data.DataConstants.TIMEOUT_SECONDS
 import ru.bugdrivenui.bduix.data.api.BduiApi
-import ru.bugdrivenui.bduix.data.api.TestApi
 import ru.bugdrivenui.bduix.data.repository.BduiScreenRepository
-import ru.bugdrivenui.bduix.data.repository.TestRepository
 import ru.bugdrivenui.bduix.domain.repository.IBduiScreenRepository
-import ru.bugdrivenui.bduix.domain.repository.ITestRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -36,12 +33,6 @@ abstract class BduixModule {
     abstract fun bindBduiScreenRepository(impl: BduiScreenRepository): IBduiScreenRepository
 
     companion object {
-
-        @Singleton
-        @Provides
-        fun provideTestApi(retrofit: Retrofit): TestApi {
-            return retrofit.create<TestApi>()
-        }
 
         @Singleton
         @Provides
@@ -114,8 +105,4 @@ abstract class BduixModule {
                 .respectCacheHeaders(true)
                 .build()
     }
-
-
-    @Binds
-    abstract fun bindTestRepository(impl: TestRepository): ITestRepository
 }

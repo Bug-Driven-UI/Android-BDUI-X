@@ -7,6 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonElement
+import ru.bugdrivenui.bduix.data.model.render.RenderedComponentModel
 
 @Serializable
 data class RenderedScreenResponseModel(

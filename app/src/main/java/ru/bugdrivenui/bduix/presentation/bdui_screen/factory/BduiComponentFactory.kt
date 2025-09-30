@@ -1,6 +1,6 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.factory
 
-import ru.bugdrivenui.bduix.data.model.RenderedComponentModel
+import ru.bugdrivenui.bduix.data.model.render.RenderedComponentModel
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiBorder
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiColor
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiInteractions

@@ -3,7 +3,9 @@ package ru.bugdrivenui.bduix.domain.interactor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.bugdrivenui.bduix.data.model.RenderedScreenResponseModel
-import ru.bugdrivenui.bduix.data.model.ScreenRenderRequestModel
+import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionRequestModel
+import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionResponseModel
+import ru.bugdrivenui.bduix.data.model.render.ScreenRenderRequestModel
 import ru.bugdrivenui.bduix.domain.repository.IBduiScreenRepository
 import ru.bugdrivenui.bduix.domain.state.State
 import ru.bugdrivenui.bduix.domain.state.toState
@@ -28,5 +30,15 @@ class BduiInteractor @Inject constructor(
         ).toState()
 
         emit(screen)
+    }
+
+    fun doAction(
+        request: ScreenDoActionRequestModel,
+    ): Flow<State<ScreenDoActionResponseModel>> = flow {
+        emit(State.Loading)
+
+        val response = bduiScreenRepository.doAction(request).toState()
+
+        emit(response)
     }
 }

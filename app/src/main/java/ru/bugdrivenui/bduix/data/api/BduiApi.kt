@@ -5,7 +5,9 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 import ru.bugdrivenui.bduix.data.model.RenderedScreenResponseModel
-import ru.bugdrivenui.bduix.data.model.ScreenRenderRequestModel
+import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionRequestModel
+import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionResponseModel
+import ru.bugdrivenui.bduix.data.model.render.ScreenRenderRequestModel
 
 interface BduiApi {
 
@@ -14,4 +16,9 @@ interface BduiApi {
         @Header("userId") userId: String,
         @Body request: ScreenRenderRequestModel,
     ): Response<RenderedScreenResponseModel>
+
+    @POST("v1/screen/action")
+    suspend fun doAction(
+        @Body request: ScreenDoActionRequestModel,
+    ): Response<ScreenDoActionResponseModel>
 }

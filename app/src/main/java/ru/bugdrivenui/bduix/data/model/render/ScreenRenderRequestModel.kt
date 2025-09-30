@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.data.model
+package ru.bugdrivenui.bduix.data.model.render
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
