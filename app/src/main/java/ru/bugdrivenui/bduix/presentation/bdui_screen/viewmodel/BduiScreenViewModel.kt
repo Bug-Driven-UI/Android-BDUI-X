@@ -3,24 +3,33 @@ package ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.bugdrivenui.bduix.R
 import ru.bugdrivenui.bduix.data.model.action.ActionRequestModel
 import ru.bugdrivenui.bduix.data.model.action.ActionResponseModel
 import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionRequestModel
 import ru.bugdrivenui.bduix.data.model.render.ScreenRenderRequestModel
 import ru.bugdrivenui.bduix.domain.interactor.BduiInteractor
 import ru.bugdrivenui.bduix.domain.state.State
-import ru.bugdrivenui.bduix.navigation.NavigationManager
 import ru.bugdrivenui.bduix.presentation.bdui_screen.factory.BduiScreenFactory
 import ru.bugdrivenui.bduix.presentation.bdui_screen.hash.BduiScreenHashCollector
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.common.updateIfContent
+import ru.bugdrivenui.bduix.сore.navigation.NavigationManager
+import ru.bugdrivenui.bduix.сore.resources.IResourcesWrapper
+import ru.bugdrivenui.bduix.сore.snackbar.SnackbarManager
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,10 +38,17 @@ class BduiScreenViewModel @Inject constructor(
     private val screenFactory: BduiScreenFactory,
     private val hashCollector: BduiScreenHashCollector,
     private val navigationManager: NavigationManager,
+    private val snackbarManager: SnackbarManager,
+    private val resourcesWrapper: IResourcesWrapper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<RenderedScreenUi>>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _refreshTrigger = MutableSharedFlow<Unit>(
+        replay = 1,
+        extraBufferCapacity = 1,
+    ).also { it.tryEmit(Unit) }
 
     init {
         startCollectFlow()
@@ -42,39 +58,46 @@ class BduiScreenViewModel @Inject constructor(
         when (action) {
             BduiActionUi.NavigateBack -> onNavigateBack()
             is BduiActionUi.SendRemoteActions -> onRemoteActions(action.actions)
+            BduiActionUi.Retry -> onRetry()
         }
     }
 
-    private fun startCollectFlow() = viewModelScope.launch {
-        bduiInteractor.getScreen(
-            request = ScreenRenderRequestModel(
-                data = ScreenRenderRequestModel.Data(
-                    screenName = "startScreen",
-                    variables = null,
-                ),
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun startCollectFlow() {
+        val request = ScreenRenderRequestModel(
+            data = ScreenRenderRequestModel.Data(
+                screenName = "startScreen",
+                variables = null,
             ),
         )
-            .collectLatest { state ->
+
+        _refreshTrigger
+            .flatMapLatest {
+                bduiInteractor.getScreen(request)
+            }
+            .map { state ->
                 when (state) {
                     State.Loading -> {
-                        _uiState.update { UiState.Loading }
+                        UiState.Loading
                     }
 
                     is State.Error -> {
-                        _uiState.update { UiState.Error }
+                        UiState.Error
                     }
 
                     is State.Success -> {
-                        _uiState.update {
-                            UiState.Content(
-                                data = screenFactory.create(
-                                    screen = state.data.screen,
-                                ),
-                            )
-                        }
+                        UiState.Content(
+                            data = screenFactory.create(
+                                screen = state.data.screen,
+                            ),
+                        )
                     }
                 }
             }
+            .onEach { state ->
+                _uiState.update { state }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun onRemoteActions(
@@ -114,7 +137,6 @@ class BduiScreenViewModel @Inject constructor(
                             isLoading = true,
                         )
                     }
-                    // TODO OverlayLoader
                 }
 
                 is State.Error -> {
@@ -124,7 +146,9 @@ class BduiScreenViewModel @Inject constructor(
                             isLoading = false,
                         )
                     }
-                    // TODO показать snackbar с текстом "что-то пошло не так"
+                    snackbarManager.show(
+                        text = resourcesWrapper.getString(R.string.general_error_snackbar_text),
+                    )
                 }
 
                 is State.Success -> {
@@ -149,7 +173,7 @@ class BduiScreenViewModel @Inject constructor(
             )
         }
         commandResponseData.fallbackMessage?.let { fallbackMessage ->
-            // TODO показать snackbar с fallbackMessage
+            snackbarManager.show(fallbackMessage)
         }
     }
 
@@ -166,5 +190,9 @@ class BduiScreenViewModel @Inject constructor(
 
     private fun onNavigateBack() {
         navigationManager.back()
+    }
+
+    private fun onRetry() {
+        _refreshTrigger.tryEmit(Unit)
     }
 }

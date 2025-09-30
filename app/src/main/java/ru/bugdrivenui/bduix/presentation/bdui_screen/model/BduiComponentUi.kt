@@ -166,6 +166,8 @@ sealed interface BduiActionUi {
     ) : BduiActionUi
 
     data object NavigateBack : BduiActionUi
+
+    data object Retry : BduiActionUi
 }
 
 enum class BduiComponentTypeUi {

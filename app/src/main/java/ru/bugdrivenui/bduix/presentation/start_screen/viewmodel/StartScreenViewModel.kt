@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
-import ru.bugdrivenui.bduix.navigation.NavigationManager
-import ru.bugdrivenui.bduix.navigation.NavigationRoute
+import ru.bugdrivenui.bduix.сore.navigation.NavigationManager
+import ru.bugdrivenui.bduix.сore.navigation.NavigationRoute
 import ru.bugdrivenui.bduix.presentation.start_screen.state.StartScreenUiState
 import javax.inject.Inject
 

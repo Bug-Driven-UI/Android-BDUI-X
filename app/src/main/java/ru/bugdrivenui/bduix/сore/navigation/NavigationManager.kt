@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.navigation
+package ru.bugdrivenui.bduix.сore.navigation
 
 import androidx.navigation.NavOptions
 import kotlinx.coroutines.flow.MutableSharedFlow

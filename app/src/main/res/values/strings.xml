@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BDUIX</string>
+
+    <string name="general_error_snackbar_text">Ой! Что-то пошло не так</string>
+    <string name="general_error_title">Неизвестная ошибка</string>
+    <string name="general_error_description">Попробуйте обновить страницу или загляните позже — мы обязательно всё починим.</string>
+    <string name="general_error_button_text">Обновить</string>
 </resources>

@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.utils.bduiBaseProperties
-import ru.bugdrivenui.bduix.utils.ifNotNull
+import ru.bugdrivenui.bduix.presentation.utils.bduiBaseProperties
+import ru.bugdrivenui.bduix.presentation.utils.ifNotNull
 
 @Composable
 fun BduiContainerComponent(

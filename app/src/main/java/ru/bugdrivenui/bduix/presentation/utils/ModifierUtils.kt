@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.utils
+package ru.bugdrivenui.bduix.presentation.utils
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

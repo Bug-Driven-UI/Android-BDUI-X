@@ -22,6 +22,8 @@ import ru.bugdrivenui.bduix.data.DataConstants.TIMEOUT_SECONDS
 import ru.bugdrivenui.bduix.data.api.BduiApi
 import ru.bugdrivenui.bduix.data.repository.BduiScreenRepository
 import ru.bugdrivenui.bduix.domain.repository.IBduiScreenRepository
+import ru.bugdrivenui.bduix.сore.resources.IResourcesWrapper
+import ru.bugdrivenui.bduix.сore.resources.ResourcesWrapper
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -31,6 +33,9 @@ abstract class BduixModule {
 
     @Binds
     abstract fun bindBduiScreenRepository(impl: BduiScreenRepository): IBduiScreenRepository
+
+    @Binds
+    abstract fun bindResourcesWrapper(impl: ResourcesWrapper): IResourcesWrapper
 
     companion object {
 

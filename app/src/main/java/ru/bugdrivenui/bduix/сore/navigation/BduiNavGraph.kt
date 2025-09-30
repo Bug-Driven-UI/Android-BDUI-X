@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.navigation
+package ru.bugdrivenui.bduix.сore.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
