@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.сore.navigation
+package ru.bugdrivenui.bduix.core.navigation
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -35,14 +35,28 @@ fun BduiNavGraph(
         ) { backStackEntry ->
             val args = backStackEntry.toRoute<NavigationRoute.BduiScreen>().args
 
-            val viewModel: BduiScreenViewModel = hiltViewModel()
+            val viewModel: BduiScreenViewModel = hiltViewModel<BduiScreenViewModel, BduiScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(
+                        screenName = args.screenName,
+                        screenParams = args.screenParams,
+                    )
+                }
+            )
             BduiScreen(viewModel)
         }
 
         bottomSheet(
             route = NavigationRoute.BottomSheet.BduiBottomSheet,
         ) { args ->
-            val viewModel: BduiScreenViewModel = hiltViewModel()
+            val viewModel: BduiScreenViewModel = hiltViewModel<BduiScreenViewModel, BduiScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(
+                        screenName = args.screenName,
+                        screenParams = args.screenParams,
+                    )
+                }
+            )
             ModalBottomSheet(
                 onDismissRequest = { navController.popBackStack() }
             ) {

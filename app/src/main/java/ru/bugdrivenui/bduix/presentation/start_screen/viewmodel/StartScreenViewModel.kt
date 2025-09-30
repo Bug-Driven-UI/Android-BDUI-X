@@ -7,11 +7,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.buildJsonObject
-import ru.bugdrivenui.bduix.сore.navigation.NavigationManager
-import ru.bugdrivenui.bduix.сore.navigation.NavigationRoute
+import ru.bugdrivenui.bduix.core.navigation.NavigationManager
+import ru.bugdrivenui.bduix.core.navigation.NavigationRoute
 import ru.bugdrivenui.bduix.presentation.start_screen.state.StartScreenUiState
 import javax.inject.Inject
+
+private const val START_SCREEN_NAME = "startScreen"
 
 @HiltViewModel
 class StartScreenViewModel @Inject constructor(
@@ -23,18 +24,17 @@ class StartScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(10000)
+            delay(1000)
             loadInitialBduiScreen()
         }
     }
 
     private fun loadInitialBduiScreen() {
-        // TODO как будем загружать начальный экран? запрос на параметры по id пользователя?
         navigationManager.replace(
             route = NavigationRoute.BduiScreen(
                 args = NavigationRoute.BduiScreen.Args(
-                    screenId = "some_screen_id",
-                    screenParams = mapOf("key" to buildJsonObject {}),
+                    screenName = START_SCREEN_NAME,
+                    screenParams = null,
                 )
             ),
         )

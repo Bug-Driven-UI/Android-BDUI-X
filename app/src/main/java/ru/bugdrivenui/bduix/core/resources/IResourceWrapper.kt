@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.сore.resources
+package ru.bugdrivenui.bduix.core.resources
 
 import android.content.Context
 import androidx.annotation.StringRes

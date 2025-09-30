@@ -49,7 +49,7 @@ sealed interface BduiComponentUi {
     data class Spacer(
         override val baseProperties: BaseProperties,
     ) : BduiComponentUi {
-        override val type: BduiComponentTypeUi = BduiComponentTypeUi.INPUT
+        override val type: BduiComponentTypeUi = BduiComponentTypeUi.SPACER
     }
 
     @Immutable
@@ -165,6 +165,11 @@ sealed interface BduiActionUi {
         val actions: List<Remote>,
     ) : BduiActionUi
 
+    data class NavigateTo(
+        val screenName: String,
+        val screenNavigationParams: Map<String, JsonElement>?,
+    ) : BduiActionUi
+
     data object NavigateBack : BduiActionUi
 
     data object Retry : BduiActionUi
@@ -179,7 +184,6 @@ enum class BduiComponentTypeUi {
     COLUMN,
     BOX,
     SPACER,
-    LOADER,
 }
 
 enum class BduiTextDecorationType {

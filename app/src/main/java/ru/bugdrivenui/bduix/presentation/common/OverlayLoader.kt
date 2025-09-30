@@ -1,5 +1,6 @@
 package ru.bugdrivenui.bduix.presentation.common
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,19 +20,21 @@ fun OverlayLoader(
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         content()
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White.copy(alpha = 0.6f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                BduiLoaderComponent(
-                    modifier = Modifier.size(
-                        width = 24.dp,
-                        height = 24.dp,
+        Crossfade(targetState = isLoading) { loading ->
+            if (loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White.copy(alpha = 0.6f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    BduiLoaderComponent(
+                        modifier = Modifier.size(
+                            width = 24.dp,
+                            height = 24.dp,
+                        )
                     )
-                )
+                }
             }
         }
     }

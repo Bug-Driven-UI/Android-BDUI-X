@@ -58,6 +58,17 @@ sealed interface RenderedActionModel {
         @SerialName("screenName") val screenName: String,
         @SerialName("screenNavigationParams") val screenNavigationParams: Map<String, JsonElement>? = null,
     ) : RenderedActionModel
+
+    @Serializable
+    @SerialName("navigateTo")
+    data class RenderedNavigateToActionModel(
+        @SerialName("screenName") val screenName: String,
+        @SerialName("screenNavigationParams") val screenNavigationParams: Map<String, JsonElement>? = null,
+    ) : RenderedActionModel
+
+    @Serializable
+    @SerialName("navigateBack")
+    data object RenderedNavigateBackActionModel : RenderedActionModel
 }
 
 @Serializable

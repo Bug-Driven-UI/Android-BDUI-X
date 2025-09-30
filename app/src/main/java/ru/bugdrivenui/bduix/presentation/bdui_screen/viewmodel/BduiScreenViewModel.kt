@@ -2,6 +2,9 @@ package ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,6 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.JsonElement
 import ru.bugdrivenui.bduix.R
 import ru.bugdrivenui.bduix.data.model.action.ActionRequestModel
 import ru.bugdrivenui.bduix.data.model.action.ActionResponseModel
@@ -27,13 +31,15 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.common.updateIfContent
-import ru.bugdrivenui.bduix.сore.navigation.NavigationManager
-import ru.bugdrivenui.bduix.сore.resources.IResourcesWrapper
-import ru.bugdrivenui.bduix.сore.snackbar.SnackbarManager
-import javax.inject.Inject
+import ru.bugdrivenui.bduix.core.navigation.NavigationManager
+import ru.bugdrivenui.bduix.core.navigation.NavigationRoute
+import ru.bugdrivenui.bduix.core.resources.IResourcesWrapper
+import ru.bugdrivenui.bduix.core.snackbar.SnackbarManager
 
-@HiltViewModel
-class BduiScreenViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = BduiScreenViewModel.Factory::class)
+class BduiScreenViewModel @AssistedInject constructor(
+    @Assisted private val screenName: String,
+    @Assisted private val screenParams: Map<String, JsonElement>?,
     private val bduiInteractor: BduiInteractor,
     private val screenFactory: BduiScreenFactory,
     private val hashCollector: BduiScreenHashCollector,
@@ -59,6 +65,7 @@ class BduiScreenViewModel @Inject constructor(
             BduiActionUi.NavigateBack -> onNavigateBack()
             is BduiActionUi.SendRemoteActions -> onRemoteActions(action.actions)
             BduiActionUi.Retry -> onRetry()
+            is BduiActionUi.NavigateTo -> onNavigateTo(action.screenName, action.screenNavigationParams)
         }
     }
 
@@ -66,8 +73,8 @@ class BduiScreenViewModel @Inject constructor(
     private fun startCollectFlow() {
         val request = ScreenRenderRequestModel(
             data = ScreenRenderRequestModel.Data(
-                screenName = "startScreen",
-                variables = null,
+                screenName = screenName,
+                variables = screenParams,
             ),
         )
 
@@ -194,5 +201,27 @@ class BduiScreenViewModel @Inject constructor(
 
     private fun onRetry() {
         _refreshTrigger.tryEmit(Unit)
+    }
+
+    private fun onNavigateTo(
+        screenName: String,
+        screenNavigationParams: Map<String, JsonElement>?,
+    ) {
+        navigationManager.navigate(
+            route = NavigationRoute.BduiScreen(
+                args = NavigationRoute.BduiScreen.Args(
+                    screenName = screenName,
+                    screenParams = screenNavigationParams,
+                )
+            )
+        )
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            screenName: String,
+            screenParams: Map<String, JsonElement>?,
+        ): BduiScreenViewModel
     }
 }

@@ -2,6 +2,7 @@ package ru.bugdrivenui.bduix.data.model.render
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ScreenRenderRequestModel(
@@ -11,6 +12,6 @@ data class ScreenRenderRequestModel(
     @Serializable
     data class Data(
         @SerialName("screenName") val screenName: String,
-        @SerialName("variables") val variables: Map<String, String>? = null,
+        @SerialName("variables") val variables: Map<String, JsonElement>? = null,
     )
 }

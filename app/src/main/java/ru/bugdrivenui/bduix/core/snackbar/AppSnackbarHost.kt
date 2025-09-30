@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.сore.snackbar
+package ru.bugdrivenui.bduix.core.snackbar
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,13 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.collectLatest
 import ru.bugdrivenui.bduix.presentation.ui.theme.BduiTheme
-import ru.bugdrivenui.bduix.presentation.ui.theme.ManropeFont
 
 @Composable
 fun AppSnackbarHost(

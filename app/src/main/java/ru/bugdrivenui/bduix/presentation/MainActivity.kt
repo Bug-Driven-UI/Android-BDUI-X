@@ -14,9 +14,9 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.bugdrivenui.bduix.presentation.ui.theme.BduiTheme
-import ru.bugdrivenui.bduix.сore.navigation.BduiNavGraph
-import ru.bugdrivenui.bduix.сore.navigation.NavigationManager
-import ru.bugdrivenui.bduix.сore.snackbar.SnackbarManager
+import ru.bugdrivenui.bduix.core.navigation.BduiNavGraph
+import ru.bugdrivenui.bduix.core.navigation.NavigationManager
+import ru.bugdrivenui.bduix.core.snackbar.SnackbarManager
 import javax.inject.Inject
 
 @AndroidEntryPoint

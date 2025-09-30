@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.сore.snackbar
+package ru.bugdrivenui.bduix.core.snackbar
 
 import androidx.compose.material3.SnackbarDuration
 

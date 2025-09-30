@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.сore.navigation
+package ru.bugdrivenui.bduix.core.navigation
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -14,8 +14,8 @@ sealed interface NavigationRoute {
 
         @Serializable
         data class Args(
-            val screenId: String,
-            val screenParams: Map<String, JsonElement>,
+            val screenName: String,
+            val screenParams: Map<String, JsonElement>?,
         )
     }
 
@@ -31,8 +31,8 @@ sealed interface NavigationRoute {
 
             @Serializable
             data class Args(
-                val screenId: String,
-                val screenParams: Map<String, JsonElement>,
+                val screenName: String,
+                val screenParams: Map<String, JsonElement>?,
             )
         }
     }

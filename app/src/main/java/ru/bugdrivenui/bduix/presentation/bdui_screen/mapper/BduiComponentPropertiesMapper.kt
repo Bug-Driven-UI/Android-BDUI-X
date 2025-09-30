@@ -11,6 +11,7 @@ import ru.bugdrivenui.bduix.data.model.RenderedStyledTextRepresentationModel
 import ru.bugdrivenui.bduix.data.model.RenderedTextDecorationTypeModel
 import ru.bugdrivenui.bduix.data.model.RenderedTextStyleModel
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi.*
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiBorder
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
@@ -50,13 +51,12 @@ fun List<RenderedInteractionModel>.toBduiInteractionActions(
 
 fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
     val actions = mutableListOf<BduiActionUi>()
-    val remoteActions = mutableListOf<BduiActionUi.Remote>()
+    val remoteActions = mutableListOf<Remote>()
     this.actions.forEach { action ->
         when (action) {
-            // TODO navigate actions
             is RenderedActionModel.RenderedCommandActionModel -> {
                 remoteActions.add(
-                    BduiActionUi.Command(
+                    Command(
                         name = action.name,
                         params = action.params,
                     )
@@ -65,7 +65,20 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
 
             is RenderedActionModel.RenderedUpdateScreenActionModel -> {
                 remoteActions.add(
-                    BduiActionUi.UpdateScreen(
+                    UpdateScreen(
+                        screenName = action.screenName,
+                        screenNavigationParams = action.screenNavigationParams,
+                    )
+                )
+            }
+
+            RenderedActionModel.RenderedNavigateBackActionModel -> {
+                actions.add(NavigateBack)
+            }
+
+            is RenderedActionModel.RenderedNavigateToActionModel -> {
+                actions.add(
+                    NavigateTo(
                         screenName = action.screenName,
                         screenNavigationParams = action.screenNavigationParams,
                     )
@@ -74,27 +87,11 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
         }
     }
     actions.add(
-        BduiActionUi.SendRemoteActions(
+        SendRemoteActions(
             actions = remoteActions,
         )
     )
     return actions
-//    return this.actions.map { action ->
-//        when (action) {
-//            is RenderedActionModel.RenderedCommandActionModel -> {
-//                BduiActionUi.Command(
-//                    name = action.name,
-//                    params = action.params,
-//                )
-//            }
-//            is RenderedActionModel.RenderedUpdateScreenActionModel -> {
-//                BduiActionUi.UpdateScreen(
-//                    screenName = action.screenName,
-//                    screenNavigationParams = action.screenNavigationParams,
-//                )
-//            }
-//        }
-//    }
 }
 
 fun RenderedInsetsModel?.toComponentInsets(): BduiComponentInsetsUi {

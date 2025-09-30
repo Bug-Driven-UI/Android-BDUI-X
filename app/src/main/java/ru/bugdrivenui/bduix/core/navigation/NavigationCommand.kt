@@ -1,4 +1,4 @@
-package ru.bugdrivenui.bduix.сore.navigation
+package ru.bugdrivenui.bduix.core.navigation
 
 import android.app.Activity
 import android.content.Context
