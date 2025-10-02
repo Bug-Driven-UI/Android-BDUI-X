@@ -1,5 +1,8 @@
 package ru.bugdrivenui.bduix.core.snackbar
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Snackbar
@@ -23,21 +26,25 @@ fun AppSnackbarHost(
         hostState = hostState,
         modifier = modifier,
     ) { data ->
-        Snackbar(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            shape = RoundedCornerShape(28.dp),
-            containerColor = BduiTheme.colors.component.toast.default,
-            contentColor = BduiTheme.colors.text.inversePrimary,
-        ) {
-            Text(
-                text = data.visuals.message,
-                color = BduiTheme.colors.text.inversePrimary,
-                style = BduiTheme.typography.M20_P,
-                modifier = Modifier.padding(
-                    horizontal = 20.dp,
-                    vertical = 16.dp,
+        Column {
+            Snackbar(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                shape = RoundedCornerShape(28.dp),
+                containerColor = BduiTheme.colors.component.toast.default,
+                contentColor = BduiTheme.colors.text.inversePrimary,
+            ) {
+                Text(
+                    text = data.visuals.message,
+                    color = BduiTheme.colors.text.inversePrimary,
+                    style = BduiTheme.typography.M20_P,
+                    modifier = Modifier.padding(
+                        horizontal = 20.dp,
+                        vertical = 16.dp,
+                    )
                 )
-            )
+            }
+            Spacer(modifier = Modifier.height(112.dp))
         }
     }
 }
