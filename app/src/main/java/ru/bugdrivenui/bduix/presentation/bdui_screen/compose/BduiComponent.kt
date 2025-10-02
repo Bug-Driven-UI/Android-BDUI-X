@@ -24,6 +24,7 @@ fun BduiComponent(
             BduiButtonComponent(
                 modifier = modifier,
                 component = component,
+                onAction = onAction,
             )
         }
 

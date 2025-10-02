@@ -173,7 +173,7 @@ sealed interface RenderedComponentModel {
     @Serializable
     @SerialName("button")
     data class Button(
-        @SerialName("textWithStyle") val textWithStyle: RenderedStyledTextRepresentationModel,
+        @SerialName("text") val text: Text,
         @SerialName("enabled") val enabled: Boolean,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,

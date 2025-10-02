@@ -89,7 +89,7 @@ class BduiComponentFactory @Inject constructor() {
         return BduiComponentUi.Button(
             baseProperties = createBaseProperties(component),
             enabled = component.enabled,
-            text = component.textWithStyle.toBduiText(),
+            text = createTextComponent(component.text) as BduiComponentUi.Text,
         )
     }
 

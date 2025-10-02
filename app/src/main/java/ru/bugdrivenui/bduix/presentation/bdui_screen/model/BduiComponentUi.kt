@@ -31,7 +31,7 @@ sealed interface BduiComponentUi {
 
     data class Button(
         override val baseProperties: BaseProperties,
-        val text: BduiText,
+        val text: Text,
         val enabled: Boolean,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.BUTTON
