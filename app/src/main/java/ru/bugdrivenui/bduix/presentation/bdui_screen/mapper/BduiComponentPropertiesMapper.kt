@@ -86,11 +86,13 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
             }
         }
     }
-    actions.add(
-        SendRemoteActions(
-            actions = remoteActions,
+    if (remoteActions.isNotEmpty()) {
+        actions.add(
+            SendRemoteActions(
+                actions = remoteActions,
+            )
         )
-    )
+    }
     return actions
 }
 

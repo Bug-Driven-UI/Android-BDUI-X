@@ -176,12 +176,12 @@ private fun TopBar(
 ) {
     BduiComponent(
         modifier = Modifier
-            .statusBarsPadding()
             .bduiBaseProperties(
                 component = component.baseProperties,
                 onAction = onAction,
                 buttonEnabled = (component as? BduiComponentUi.Button)?.enabled,
-            ),
+            )
+            .statusBarsPadding(),
         component = component,
         onAction = onAction,
     )

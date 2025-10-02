@@ -32,6 +32,7 @@ fun BduiTextComponent(
         textDecoration = when (component.text.style.decorationType) {
             BduiTextDecorationType.UNDERLINE -> TextDecoration.Underline
             BduiTextDecorationType.STRIKETHROUGH -> TextDecoration.LineThrough
+            BduiTextDecorationType.STRIKETHROUGH_RED -> TextDecoration.LineThrough
             else -> TextDecoration.None
         },
         color = textColor,
