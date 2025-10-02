@@ -1,14 +1,9 @@
 package ru.bugdrivenui.bduix.di
 
-import android.content.Context
-import coil.ImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -16,14 +11,18 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.create
+import ru.bugdrivenui.bduix.core.analytics.AnalyticsLoggerFacade
+import ru.bugdrivenui.bduix.core.analytics.FirebaseAnalyticsLogger
+import ru.bugdrivenui.bduix.core.analytics.IAnalyticsLogger
+import ru.bugdrivenui.bduix.core.analytics.IAnalyticsLoggerFacade
+import ru.bugdrivenui.bduix.core.resources.IResourcesWrapper
+import ru.bugdrivenui.bduix.core.resources.ResourcesWrapper
 import ru.bugdrivenui.bduix.data.DataConstants.APPLICATION_JSON
 import ru.bugdrivenui.bduix.data.DataConstants.BASE_URL
 import ru.bugdrivenui.bduix.data.DataConstants.TIMEOUT_SECONDS
 import ru.bugdrivenui.bduix.data.api.BduiApi
 import ru.bugdrivenui.bduix.data.repository.BduiScreenRepository
 import ru.bugdrivenui.bduix.domain.repository.IBduiScreenRepository
-import ru.bugdrivenui.bduix.core.resources.IResourcesWrapper
-import ru.bugdrivenui.bduix.core.resources.ResourcesWrapper
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -36,6 +35,12 @@ abstract class BduixModule {
 
     @Binds
     abstract fun bindResourcesWrapper(impl: ResourcesWrapper): IResourcesWrapper
+
+    @Binds
+    abstract fun bindAnalyticsLogger(impl: FirebaseAnalyticsLogger): IAnalyticsLogger
+
+    @Binds
+    abstract fun bindAnalyticsLoggerFacade(impl: AnalyticsLoggerFacade): IAnalyticsLoggerFacade
 
     companion object {
 
@@ -86,28 +91,5 @@ abstract class BduixModule {
             ignoreUnknownKeys = true
             prettyPrint = true
         }
-
-        @Singleton
-        @Provides
-        fun provideImageLoader(
-            @ApplicationContext context: Context,
-            okHttpClient: OkHttpClient,
-        ): ImageLoader =
-            ImageLoader.Builder(context)
-                .okHttpClient(okHttpClient)
-                .memoryCache {
-                    MemoryCache.Builder(context)
-                        .maxSizePercent(0.25)
-                        .build()
-                }
-                .diskCache {
-                    DiskCache.Builder()
-                        .directory(context.cacheDir.resolve("coil_image_cache"))
-                        .maxSizePercent(0.02)
-                        .build()
-                }
-                .crossfade(true)
-                .respectCacheHeaders(true)
-                .build()
     }
 }

@@ -96,8 +96,8 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
 
 fun RenderedInsetsModel?.toComponentInsets(): BduiComponentInsetsUi {
     return BduiComponentInsetsUi(
-        start = this?.left.orZero(),
-        end = this?.right.orZero(),
+        start = this?.start.orZero(),
+        end = this?.end.orZero(),
         top = this?.top.orZero(),
         bottom = this?.bottom.orZero(),
     )

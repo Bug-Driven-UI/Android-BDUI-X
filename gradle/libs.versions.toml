@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.0"
 coilCompose = "2.7.0"
+firebaseBom = "34.3.0"
 kotlin = "2.0.21"
 kotlinCoroutines = "1.10.2"
 ksp = "2.0.21-1.0.27"
@@ -24,9 +25,12 @@ appcompat = "1.7.1"
 material = "1.12.0"
 jetbrainsKotlinJvm = "2.0.21"
 hiltNavigationCompose = "1.2.0"
+googleServices = "4.4.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -70,3 +74,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

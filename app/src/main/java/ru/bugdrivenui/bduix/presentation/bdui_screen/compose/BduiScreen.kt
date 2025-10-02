@@ -13,11 +13,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import ru.bugdrivenui.bduix.core.snackbar.AppSnackbarHost
 import ru.bugdrivenui.bduix.core.snackbar.rememberAppSnackbarHostState
 import ru.bugdrivenui.bduix.presentation.LocalSnackbarManager
@@ -50,6 +57,9 @@ fun BduiScreen(
                 LoaderScreen()
             }
             UiState.Key.ERROR -> {
+                LaunchedEffect(key1 = Unit) {
+                    onAction.invoke(BduiActionUi.ErrorScreenShown)
+                }
                 ErrorScreen(
                     modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
                     onRetry = { onAction.invoke(BduiActionUi.Retry) },
@@ -70,10 +80,35 @@ private fun BduiScreenScaffold(
     model: RenderedScreenUi,
     onAction: (BduiActionUi) -> Unit,
 ) {
+    val renderingStartNs = remember { System.nanoTime() }
+    var reported by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     val snackbarManager = LocalSnackbarManager.current
     val snackbarHostState = rememberAppSnackbarHostState(snackbarManager)
 
+    LaunchedEffect(key1 = Unit) {
+        onAction.invoke(BduiActionUi.ScreenShown)
+    }
+
     Scaffold(
+        modifier = Modifier.onGloballyPositioned {
+            if (!reported) {
+                reported = true
+                scope.launch {
+                    withFrameNanos { now ->
+                        val ms = (now - renderingStartNs) / 1_000_000
+                        onAction.invoke(
+                            BduiActionUi.ScreenRendered(
+                                renderTimeMs = ms,
+                                screenVersion = model.version,
+                                components = model.components,
+                            )
+                        )
+                    }
+                }
+            }
+        },
         snackbarHost = { AppSnackbarHost(snackbarHostState) },
         topBar = {
             model.scaffold?.topBar?.let { topBar ->

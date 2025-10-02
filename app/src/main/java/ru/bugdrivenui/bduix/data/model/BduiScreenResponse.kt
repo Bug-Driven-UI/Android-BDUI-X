@@ -73,8 +73,8 @@ sealed interface RenderedActionModel {
 
 @Serializable
 data class RenderedInsetsModel(
-    @SerialName("left") val left: Int,
-    @SerialName("right") val right: Int,
+    @SerialName("start") val start: Int,
+    @SerialName("end") val end: Int,
     @SerialName("bottom") val bottom: Int,
     @SerialName("top") val top: Int,
 )

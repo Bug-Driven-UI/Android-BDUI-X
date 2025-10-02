@@ -170,6 +170,20 @@ sealed interface BduiActionUi {
         val screenNavigationParams: Map<String, JsonElement>?,
     ) : BduiActionUi
 
+    data object ScreenShown : BduiActionUi
+
+    data class ScreenRendered(
+        val renderTimeMs: Long,
+        val screenVersion: Int,
+        val components: List<BduiComponentUi>,
+    ) : BduiActionUi
+
+    data object ErrorScreenShown : BduiActionUi
+
+    data class ComponentClicked(
+        val componentId: String,
+    ) : BduiActionUi
+
     data object NavigateBack : BduiActionUi
 
     data object Retry : BduiActionUi
@@ -193,3 +207,10 @@ enum class BduiTextDecorationType {
     STRIKETHROUGH,
     STRIKETHROUGH_RED,
 }
+
+fun BduiComponentUi.allNodesCount(): Int = when (this) {
+    is BduiComponentUi.Container -> 1 + children.sumOf { it.allNodesCount() }
+    else -> 1
+}
+
+fun List<BduiComponentUi>.allNodesCount(): Int = sumOf { it.allNodesCount() }

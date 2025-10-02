@@ -11,13 +11,13 @@ import ru.bugdrivenui.bduix.data.model.render.ScreenRenderRequestModel
 
 interface BduiApi {
 
-    @POST("v1/screen/render")
+    @POST("api/v1/screen/render")
     suspend fun getRenderedScreen(
         @Header("userId") userId: String,
         @Body request: ScreenRenderRequestModel,
     ): Response<RenderedScreenResponseModel>
 
-    @POST("v1/screen/action")
+    @POST("api/v1/screen/action")
     suspend fun doAction(
         @Body request: ScreenDoActionRequestModel,
     ): Response<ScreenDoActionResponseModel>

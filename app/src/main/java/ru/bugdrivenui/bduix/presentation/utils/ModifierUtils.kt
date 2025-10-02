@@ -43,6 +43,7 @@ fun Modifier.bduiBaseProperties(
             bottomStart = component.shape.bottomStart.dp,
             bottomEnd = component.shape.bottomEnd.dp,
         )
+
         null -> RectangleShape
     }
 
@@ -72,7 +73,14 @@ fun Modifier.bduiBaseProperties(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = ripple(),
                     enabled = buttonEnabled ?: true,
-                    onClick = { onClickActions.forEach { onAction(it) } },
+                    onClick = {
+                        onClickActions.forEach { onAction(it) }
+                        onAction.invoke(
+                            BduiActionUi.ComponentClicked(
+                                componentId = component.id,
+                            )
+                        )
+                    },
                 )
             }
             .bduiPadding(component.paddings)

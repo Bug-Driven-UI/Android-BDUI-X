@@ -100,7 +100,7 @@ sealed interface RenderedComponentModel {
     @SerialName("image")
     data class Image(
         @SerialName("imageUrl") val imageUrl: String,
-        @SerialName("badge") val badge: RenderedBadgeModel,
+        @SerialName("badge") val badge: RenderedBadgeModel? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
         @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
