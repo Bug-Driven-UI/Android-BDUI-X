@@ -57,3 +57,11 @@
    ```bash
     ./gradlew clean assembleDebug
     adb install app/build/outputs/apk/debug/app-debug.apk
+   
+---
+   
+## 🧭 Навигация
+
+- [Рассматриваемые архитектурные решения](https://github.com/Bug-Driven-UI/Android-BDUI-X/tree/main/docs/adr)
+- [Roadmap](https://github.com/Bug-Driven-UI/Android-BDUI-X/blob/main/docs/roadmap/roadmap.md)
+- [Основная документация](https://github.com/Bug-Driven-UI/web/wiki)
