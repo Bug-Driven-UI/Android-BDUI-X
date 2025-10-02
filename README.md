@@ -33,7 +33,7 @@
 ## 🚀 Быстрый старт
 
 ### 📦 APK Release
-👉 [TODO: ссылка на release APK в GitHub]
+👉 [Скачать приложение](https://github.com/Bug-Driven-UI/Android-BDUI-X/releases/tag/v1.0.0)
 
 ---
 
