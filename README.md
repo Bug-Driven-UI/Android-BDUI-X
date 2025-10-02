@@ -49,7 +49,7 @@
 1. Создать проект в **Firebase** и включить аналитику.
 2. Склонировать проект в Android Studio:
    ```bash
-   git clone https://github.com/Bug-Driven-UI/Android.git
+   git clone https://github.com/Bug-Driven-UI/Android-BDUI-X.git
 3. Скачать файл google-services.json из Firebase и положить его в /app.
 4. Запустить приложение:
    - Через Android Studio (Run app)
