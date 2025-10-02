@@ -24,7 +24,7 @@
 - **Jetpack Compose** — декларативный UI
 - **Dagger/Hilt** — DI
 - **Retrofit + OkHttp** — сетевой слой
-- **KotinX Serialization** — сериализация/десериализация данных
+- **KotlinX Serialization** — сериализация/десериализация данных
 - **Firebase Analytics** — аналитика
 - **Coil** — загрузка и кэширование изображений из сети
 
