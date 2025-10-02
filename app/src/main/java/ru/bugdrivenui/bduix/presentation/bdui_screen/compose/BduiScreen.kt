@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -112,6 +113,7 @@ private fun BduiScreenScaffold(
                 }
             }
         },
+        containerColor = Color.White,
         snackbarHost = { AppSnackbarHost(snackbarHostState) },
         topBar = {
             model.scaffold?.topBar?.let { topBar ->
@@ -192,7 +194,6 @@ private fun BottomBar(
 ) {
     BduiComponent(
         modifier = Modifier
-            .statusBarsPadding()
             .shadow(
                 elevation = 8.dp,
                 shape = component.baseProperties.shape.toComposeShape(),
@@ -201,7 +202,8 @@ private fun BottomBar(
                 component = component.baseProperties,
                 onAction = onAction,
                 buttonEnabled = (component as? BduiComponentUi.Button)?.enabled,
-            ),
+            )
+            .navigationBarsPadding(),
         component = component,
         onAction = onAction,
     )
