@@ -21,8 +21,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
 import ru.bugdrivenui.bduix.core.snackbar.AppSnackbarHost
@@ -37,6 +39,7 @@ import ru.bugdrivenui.bduix.presentation.common.LoaderScreen
 import ru.bugdrivenui.bduix.presentation.common.OverlayLoader
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.utils.bduiBaseProperties
+import ru.bugdrivenui.bduix.utils.toComposeShape
 
 @Composable
 fun BduiScreen(
@@ -112,7 +115,7 @@ private fun BduiScreenScaffold(
         snackbarHost = { AppSnackbarHost(snackbarHostState) },
         topBar = {
             model.scaffold?.topBar?.let { topBar ->
-                TopOrBottomBar(
+                TopBar(
                     component = topBar,
                     onAction = onAction,
                 )
@@ -120,7 +123,7 @@ private fun BduiScreenScaffold(
         },
         bottomBar = {
             model.scaffold?.bottomBar?.let { bottomBar ->
-                TopOrBottomBar(
+                BottomBar(
                     component = bottomBar,
                     onAction = onAction,
                 )
@@ -165,13 +168,35 @@ private fun BduiScreenContent(
 }
 
 @Composable
-private fun TopOrBottomBar(
+private fun TopBar(
     component: BduiComponentUi,
     onAction: (BduiActionUi) -> Unit,
 ) {
     BduiComponent(
         modifier = Modifier
             .statusBarsPadding()
+            .bduiBaseProperties(
+                component = component.baseProperties,
+                onAction = onAction,
+                buttonEnabled = (component as? BduiComponentUi.Button)?.enabled,
+            ),
+        component = component,
+        onAction = onAction,
+    )
+}
+
+@Composable
+private fun BottomBar(
+    component: BduiComponentUi,
+    onAction: (BduiActionUi) -> Unit,
+) {
+    BduiComponent(
+        modifier = Modifier
+            .statusBarsPadding()
+            .shadow(
+                elevation = 8.dp,
+                shape = component.baseProperties.shape.toComposeShape(),
+            )
             .bduiBaseProperties(
                 component = component.baseProperties,
                 onAction = onAction,
