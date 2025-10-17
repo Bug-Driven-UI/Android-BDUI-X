@@ -10,6 +10,9 @@ sealed interface NavigationRoute {
     data object StartScreen : NavigationRoute
 
     @Serializable
+    data object LoginScreen : NavigationRoute
+
+    @Serializable
     data class BduiScreen(val args: Args) : NavigationRoute {
 
         @Serializable

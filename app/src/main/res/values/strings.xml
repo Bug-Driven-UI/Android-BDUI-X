@@ -5,4 +5,8 @@
     <string name="general_error_title">Неизвестная ошибка</string>
     <string name="general_error_description">Попробуйте обновить страницу или загляните позже — мы обязательно всё починим.</string>
     <string name="general_error_button_text">Обновить</string>
+
+    <string name="login_title_text">Вход</string>
+    <string name="login_button_text">Войти</string>
+    <string name="api_key_error">Неверный ключ</string>
 </resources>

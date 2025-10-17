@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.0"
 coilCompose = "2.7.0"
+datastorePreferences = "1.1.7"
 firebaseBom = "34.3.0"
 kotlin = "2.0.21"
 kotlinCoroutines = "1.10.2"
@@ -26,11 +27,17 @@ material = "1.12.0"
 jetbrainsKotlinJvm = "2.0.21"
 hiltNavigationCompose = "1.2.0"
 googleServices = "4.4.3"
+securityCrypto = "1.1.0"
+tinkAndroid = "1.18.0"
+tinkBom = "1.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-tink-android = { module = "com.google.crypto.tink:tink-android", version.ref = "tinkAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -63,6 +70,8 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
+tink-android = { module = "com.google.crypto.tink:tink-android" }
+tink-bom = { module = "com.google.crypto.tink:tink-bom", version.ref = "tinkBom" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

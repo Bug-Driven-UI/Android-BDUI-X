@@ -11,4 +11,6 @@ object PresentationConstants {
     const val PATH_SEPARATOR = "/"
     const val PATH_SEPARATOR_CHAR = '/'
     const val PATH_ROOT = PATH_SEPARATOR
+
+    const val START_SCREEN_NAME = "startScreen"
 }

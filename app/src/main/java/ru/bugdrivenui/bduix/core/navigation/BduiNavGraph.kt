@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import ru.bugdrivenui.bduix.presentation.bdui_screen.compose.BduiScreen
 import ru.bugdrivenui.bduix.presentation.bdui_screen.viewmodel.BduiScreenViewModel
+import ru.bugdrivenui.bduix.presentation.login_screen.LoginScreenWrapper
 import ru.bugdrivenui.bduix.presentation.start_screen.compose.StartScreen
 import ru.bugdrivenui.bduix.presentation.start_screen.viewmodel.StartScreenViewModel
 import kotlin.reflect.typeOf
@@ -26,6 +27,10 @@ fun BduiNavGraph(
         composable<NavigationRoute.StartScreen> {
             val viewModel: StartScreenViewModel = hiltViewModel()
             StartScreen()
+        }
+
+        composable<NavigationRoute.LoginScreen> {
+            LoginScreenWrapper()
         }
 
         composable<NavigationRoute.BduiScreen>(
