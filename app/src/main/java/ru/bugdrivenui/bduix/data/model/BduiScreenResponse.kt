@@ -134,7 +134,16 @@ data class RenderedStyledTextRepresentationModel(
     @SerialName("text") val text: String,
     @SerialName("textStyle") val textStyle: RenderedTextStyleModel,
     @SerialName("colorStyle") val textColorStyle: RenderedColorStyleModel,
-)
+    @SerialName("textAlignment") val textAlignment: TextAlignmentModel? = null,
+) {
+
+    @Serializable
+    enum class TextAlignmentModel {
+        @SerialName("start") START,
+        @SerialName("center") CENTER,
+        @SerialName("end") END,
+    }
+}
 
 @Serializable
 data class RenderedTextStyleModel(

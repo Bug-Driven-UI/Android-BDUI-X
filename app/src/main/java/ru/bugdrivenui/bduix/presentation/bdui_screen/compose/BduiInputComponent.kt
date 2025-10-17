@@ -158,17 +158,20 @@ private fun BduiInputComponent_Preview() {
         text = BduiText(
             value = "",
             color = BduiColor("#FFFFFF"),
-            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 15)
+            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 15),
+            textAlignment = null,
         ),
         placeholder = BduiText(
             value = "Введите текст",
             color = BduiColor("#FFFFFF"),
-            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 15)
+            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 15),
+            textAlignment = null,
         ),
         hint = BduiText(
             value = "",
             color = BduiColor("#965EEB"),
-            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 12)
+            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 12),
+            textAlignment = null,
         ),
     )
     BduiInputComponent(component = component)

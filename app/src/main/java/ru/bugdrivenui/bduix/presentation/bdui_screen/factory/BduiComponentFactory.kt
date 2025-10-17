@@ -1,6 +1,11 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.factory
 
 import ru.bugdrivenui.bduix.data.model.render.RenderedComponentModel
+import ru.bugdrivenui.bduix.data.model.render.RenderedHorizontalAlignment
+import ru.bugdrivenui.bduix.data.model.render.RenderedHorizontalAndVerticalAlignment
+import ru.bugdrivenui.bduix.data.model.render.RenderedHorizontalArrangement
+import ru.bugdrivenui.bduix.data.model.render.RenderedVerticalAlignment
+import ru.bugdrivenui.bduix.data.model.render.RenderedVerticalArrangement
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiBorder
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiColor
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiInteractions
@@ -9,6 +14,11 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiText
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentInsets
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentSize
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiHorizontalAlignment
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiHorizontalAndVerticalAlignment
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiHorizontalArrangement
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiVerticalAlignment
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiVerticalArrangement
 import javax.inject.Inject
 
 class BduiComponentFactory @Inject constructor() {
@@ -51,6 +61,7 @@ class BduiComponentFactory @Inject constructor() {
         component: RenderedComponentModel.Box,
     ): BduiComponentUi {
         return BduiComponentUi.Box(
+            contentAlignment = component.contentAlignment.toBduiAlignment(),
             baseProperties = createBaseProperties(component),
             children = component.children.map(::create),
         )
@@ -60,6 +71,8 @@ class BduiComponentFactory @Inject constructor() {
         component: RenderedComponentModel.Row,
     ): BduiComponentUi {
         return BduiComponentUi.Row(
+            horizontalArrangement = component.horizontalArrangement.toBduiArrangement(),
+            verticalAlignment = component.verticalAlignment.toBduiAlignment(),
             baseProperties = createBaseProperties(component),
             children = component.children.map(::create),
         )
@@ -69,6 +82,8 @@ class BduiComponentFactory @Inject constructor() {
         component: RenderedComponentModel.Column,
     ): BduiComponentUi {
         return BduiComponentUi.Column(
+            verticalArrangement = component.verticalArrangement.toBduiArrangement(),
+            horizontalAlignment = component.horizontalAlignment.toBduiAlignment(),
             baseProperties = createBaseProperties(component),
             children = component.children.map(::create),
         )
@@ -119,5 +134,57 @@ class BduiComponentFactory @Inject constructor() {
         return BduiComponentUi.Spacer(
             baseProperties = createBaseProperties(component),
         )
+    }
+
+    private fun RenderedHorizontalAndVerticalAlignment?.toBduiAlignment() = this?.let {
+        when (this) {
+            RenderedHorizontalAndVerticalAlignment.BottomCenter -> BduiHorizontalAndVerticalAlignment.BottomCenter
+            RenderedHorizontalAndVerticalAlignment.BottomEnd -> BduiHorizontalAndVerticalAlignment.BottomEnd
+            RenderedHorizontalAndVerticalAlignment.BottomStart -> BduiHorizontalAndVerticalAlignment.BottomStart
+            RenderedHorizontalAndVerticalAlignment.Center -> BduiHorizontalAndVerticalAlignment.Center
+            RenderedHorizontalAndVerticalAlignment.CenterEnd -> BduiHorizontalAndVerticalAlignment.CenterEnd
+            RenderedHorizontalAndVerticalAlignment.CenterStart -> BduiHorizontalAndVerticalAlignment.CenterStart
+            RenderedHorizontalAndVerticalAlignment.TopCenter -> BduiHorizontalAndVerticalAlignment.TopCenter
+            RenderedHorizontalAndVerticalAlignment.TopEnd -> BduiHorizontalAndVerticalAlignment.TopEnd
+            RenderedHorizontalAndVerticalAlignment.TopStart -> BduiHorizontalAndVerticalAlignment.TopStart
+        }
+    }
+
+    private fun RenderedVerticalArrangement?.toBduiArrangement() = this?.let {
+        when (this) {
+            RenderedVerticalArrangement.Bottom -> BduiVerticalArrangement.Bottom
+            RenderedVerticalArrangement.Center -> BduiVerticalArrangement.Center
+            RenderedVerticalArrangement.SpaceAround -> BduiVerticalArrangement.SpaceAround
+            RenderedVerticalArrangement.SpaceBetween -> BduiVerticalArrangement.SpaceBetween
+            RenderedVerticalArrangement.SpaceEvenly -> BduiVerticalArrangement.SpaceEvenly
+            RenderedVerticalArrangement.Top -> BduiVerticalArrangement.Top
+        }
+    }
+
+    private fun RenderedHorizontalAlignment?.toBduiAlignment() = this?.let {
+        when (this) {
+            RenderedHorizontalAlignment.Center -> BduiHorizontalAlignment.Center
+            RenderedHorizontalAlignment.End -> BduiHorizontalAlignment.End
+            RenderedHorizontalAlignment.Start -> BduiHorizontalAlignment.Start
+        }
+    }
+
+    private fun RenderedHorizontalArrangement?.toBduiArrangement() = this?.let {
+        when (this) {
+            RenderedHorizontalArrangement.Center -> BduiHorizontalArrangement.Center
+            RenderedHorizontalArrangement.End -> BduiHorizontalArrangement.End
+            RenderedHorizontalArrangement.SpaceAround -> BduiHorizontalArrangement.SpaceAround
+            RenderedHorizontalArrangement.SpaceBetween -> BduiHorizontalArrangement.SpaceBetween
+            RenderedHorizontalArrangement.SpaceEvenly -> BduiHorizontalArrangement.SpaceEvenly
+            RenderedHorizontalArrangement.Start -> BduiHorizontalArrangement.Start
+        }
+    }
+
+    private fun RenderedVerticalAlignment?.toBduiAlignment() = this?.let {
+        when (this) {
+            RenderedVerticalAlignment.Bottom -> BduiVerticalAlignment.Bottom
+            RenderedVerticalAlignment.Center -> BduiVerticalAlignment.Center
+            RenderedVerticalAlignment.Top -> BduiVerticalAlignment.Top
+        }
     }
 }

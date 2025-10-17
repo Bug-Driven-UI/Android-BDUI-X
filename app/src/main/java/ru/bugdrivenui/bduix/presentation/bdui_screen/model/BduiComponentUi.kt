@@ -59,6 +59,8 @@ sealed interface BduiComponentUi {
     }
 
     data class Column(
+        val verticalArrangement: BduiVerticalArrangement?,
+        val horizontalAlignment: BduiHorizontalAlignment?,
         override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
     ) : Container {
@@ -66,6 +68,8 @@ sealed interface BduiComponentUi {
     }
 
     data class Row(
+        val horizontalArrangement: BduiHorizontalArrangement?,
+        val verticalAlignment: BduiVerticalAlignment?,
         override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
     ) : Container {
@@ -73,6 +77,7 @@ sealed interface BduiComponentUi {
     }
 
     data class Box(
+        val contentAlignment: BduiHorizontalAndVerticalAlignment?,
         override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
     ) : Container {
@@ -97,7 +102,14 @@ data class BduiText(
     val value: String,
     val color: BduiColor,
     val style: BduiTextStyle,
+    val textAlignment: BduiTextAlignment?,
 )
+
+enum class BduiTextAlignment {
+    START,
+    CENTER,
+    END,
+}
 
 data class BduiTextStyle(
     val decorationType: BduiTextDecorationType,

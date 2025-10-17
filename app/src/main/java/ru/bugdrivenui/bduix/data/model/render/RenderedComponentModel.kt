@@ -36,6 +36,8 @@ sealed interface RenderedComponentModel {
     @SerialName("row")
     data class Row(
         @SerialName("children") val children: List<RenderedComponentModel>,
+        @SerialName("horizontalArrangement") val horizontalArrangement: RenderedHorizontalArrangement? = null,
+        @SerialName("verticalAlignment") val verticalAlignment: RenderedVerticalAlignment? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
         @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
@@ -52,6 +54,7 @@ sealed interface RenderedComponentModel {
     @SerialName("box")
     data class Box(
         @SerialName("children") val children: List<RenderedComponentModel>,
+        @SerialName("contentAlignment") val contentAlignment: RenderedHorizontalAndVerticalAlignment? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
         @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
@@ -68,6 +71,8 @@ sealed interface RenderedComponentModel {
     @SerialName("column")
     data class Column(
         @SerialName("children") val children: List<RenderedComponentModel>,
+        @SerialName("verticalArrangement") val verticalArrangement: RenderedVerticalArrangement? = null,
+        @SerialName("horizontalAlignment") val horizontalAlignment: RenderedHorizontalAlignment? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
         @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),

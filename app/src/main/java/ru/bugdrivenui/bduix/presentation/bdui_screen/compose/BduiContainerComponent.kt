@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toCompose
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
@@ -22,7 +23,10 @@ fun BduiContainerComponent(
 ) {
     when (component) {
         is BduiComponentUi.Box -> {
-            Box(modifier = modifier) {
+            Box(
+                modifier = modifier,
+                contentAlignment = component.contentAlignment.toCompose(),
+            ) {
                 component.children.forEach { child ->
                     BduiComponentWrapper(
                         component = child,
@@ -33,7 +37,11 @@ fun BduiContainerComponent(
         }
 
         is BduiComponentUi.Column -> {
-            Column(modifier = modifier) {
+            Column(
+                modifier = modifier,
+                verticalArrangement = component.verticalArrangement.toCompose(),
+                horizontalAlignment = component.horizontalAlignment.toCompose(),
+            ) {
                 component.children.forEach { child ->
                     BduiComponentWrapper(
                         component = child,
@@ -44,7 +52,11 @@ fun BduiContainerComponent(
         }
 
         is BduiComponentUi.Row -> {
-            Row(modifier = modifier) {
+            Row(
+                modifier = modifier,
+                horizontalArrangement = component.horizontalArrangement.toCompose(),
+                verticalAlignment = component.verticalAlignment.toCompose(),
+            ) {
                 component.children.forEach { child ->
                     BduiComponentWrapper(
                         component = child,

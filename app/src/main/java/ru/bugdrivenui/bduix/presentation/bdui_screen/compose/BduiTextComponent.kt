@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toCompose
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeFontWeight
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
@@ -40,6 +41,7 @@ fun BduiTextComponent(
         fontStyle = fontStyle,
         fontWeight = fontWeight,
         fontFamily = ManropeFont,
+        textAlign = component.text.textAlignment.toCompose(),
     )
 
     if (component.text.style.decorationType == BduiTextDecorationType.STRIKETHROUGH_RED) {

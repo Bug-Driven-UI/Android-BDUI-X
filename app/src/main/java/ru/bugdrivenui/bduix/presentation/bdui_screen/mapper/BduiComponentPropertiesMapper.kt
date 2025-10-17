@@ -19,6 +19,7 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInteract
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiShape
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextAlignment
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextStyle
 import ru.bugdrivenui.bduix.presentation.utils.PresentationConstants.DEFAULT_TEXT_COLOR_HEX
@@ -121,6 +122,13 @@ fun RenderedStyledTextRepresentationModel.toBduiText(): BduiText {
             fallbackColor = BduiColor(DEFAULT_TEXT_COLOR_HEX),
         ),
         style = this.textStyle.toBduiTextStyle(),
+        textAlignment = this.textAlignment?.let { alignment ->
+            when (alignment) {
+                RenderedStyledTextRepresentationModel.TextAlignmentModel.START -> BduiTextAlignment.START
+                RenderedStyledTextRepresentationModel.TextAlignmentModel.CENTER -> BduiTextAlignment.CENTER
+                RenderedStyledTextRepresentationModel.TextAlignmentModel.END -> BduiTextAlignment.END
+            }
+        },
     )
 }
 

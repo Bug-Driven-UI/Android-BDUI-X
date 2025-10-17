@@ -104,6 +104,7 @@ private fun BduiButtonComponentPreview() = BduiTheme {
                         weight = 600,
                         size = 15,
                     ),
+                    textAlignment = null,
                 ),
             ),
             enabled = true,
