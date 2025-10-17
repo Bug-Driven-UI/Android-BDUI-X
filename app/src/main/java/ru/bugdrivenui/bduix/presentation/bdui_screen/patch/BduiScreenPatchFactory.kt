@@ -11,7 +11,7 @@ import javax.inject.Inject
 class BduiScreenPatchFactory @Inject constructor() {
 
     fun createPatches(
-        updates: List<ActionResponseModel.UpdateScreen.Response.Data>,
+        updates: List<ActionResponseModel.UpdateScreen.Response.PatchData>,
         factory: (RenderedComponentModel) -> BduiComponentUi,
     ): List<ComponentPatch> = updates.mapNotNull { updateData ->
         val segments = updateData.target.pathToSegments()
@@ -23,9 +23,9 @@ class BduiScreenPatchFactory @Inject constructor() {
         }
         val childId = segments.last()
         val method = when (updateData.method) {
-            ActionResponseModel.UpdateScreen.Response.Data.ActionMethod.INSERT -> ComponentPatch.Method.INSERT
-            ActionResponseModel.UpdateScreen.Response.Data.ActionMethod.UPDATE -> ComponentPatch.Method.UPDATE
-            ActionResponseModel.UpdateScreen.Response.Data.ActionMethod.DELETE -> ComponentPatch.Method.DELETE
+            ActionResponseModel.UpdateScreen.Response.PatchData.ActionMethod.INSERT -> ComponentPatch.Method.INSERT
+            ActionResponseModel.UpdateScreen.Response.PatchData.ActionMethod.UPDATE -> ComponentPatch.Method.UPDATE
+            ActionResponseModel.UpdateScreen.Response.PatchData.ActionMethod.DELETE -> ComponentPatch.Method.DELETE
         }
 
         ComponentPatch(

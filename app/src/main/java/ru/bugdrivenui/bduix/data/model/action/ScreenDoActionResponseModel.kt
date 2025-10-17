@@ -45,11 +45,13 @@ sealed interface ActionResponseModel {
 
         @Serializable
         data class Response(
-            @SerialName("data") val data: List<Data>,
+            @SerialName("screen") val screen: List<PatchData>,
+            @SerialName("topBar") val topBar: List<PatchData>? = null,
+            @SerialName("bottomBar") val bottomBar: List<PatchData>? = null,
         ) {
 
             @Serializable
-            data class Data(
+            data class PatchData(
                 @SerialName("target") val target: String,
                 @SerialName("method") val method: ActionMethod,
                 @SerialName("content") val content: RenderedComponentModel? = null,

@@ -6,6 +6,7 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiScaffoldUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.patch.BduiScreenPatchFactory
 import ru.bugdrivenui.bduix.presentation.bdui_screen.patch.BduiScreenPatchManager
+import ru.bugdrivenui.bduix.utils.asList
 import javax.inject.Inject
 
 class BduiScreenFactory @Inject constructor(
@@ -34,16 +35,46 @@ class BduiScreenFactory @Inject constructor(
         screen: RenderedScreenUi,
         updateScreenResponse: ActionResponseModel.UpdateScreen.Response,
     ): RenderedScreenUi {
-        val patches = screenPatchFactory.createPatches(
-            updates = updateScreenResponse.data,
+        val newTopBar = updateScreenResponse.topBar?.let { topBarPatchesData ->
+            screenPatchFactory.createPatches(
+                updates = topBarPatchesData,
+                factory = componentFactory::create,
+            )
+        }?.let { topBarPatches ->
+            componentPatchManager.applyPatchesToRoot(
+                rootChildren = screen.scaffold?.topBar?.asList() ?: emptyList(),
+                patches = topBarPatches,
+            )
+        }
+
+        val newBottomBar = updateScreenResponse.bottomBar?.let { bottomBarPatchesData ->
+            screenPatchFactory.createPatches(
+                updates = bottomBarPatchesData,
+                factory = componentFactory::create,
+            )
+        }?.let { bottomBarPatches ->
+            componentPatchManager.applyPatchesToRoot(
+                rootChildren = screen.scaffold?.bottomBar?.asList() ?: emptyList(),
+                patches = bottomBarPatches,
+            )
+        }
+
+        val newComponents = screenPatchFactory.createPatches(
+            updates = updateScreenResponse.screen,
             factory = componentFactory::create,
-        )
-        val newChildren = componentPatchManager.applyPatchesToRoot(
-            rootChildren = screen.components,
-            patches = patches,
-        )
+        ).let { screenPatches ->
+            componentPatchManager.applyPatchesToRoot(
+                rootChildren = screen.components,
+                patches = screenPatches,
+            )
+        }
+
         return screen.copy(
-            components = newChildren,
+            components = newComponents,
+            scaffold = screen.scaffold?.copy(
+                topBar = newTopBar?.firstOrNull(),
+                bottomBar = newBottomBar?.firstOrNull(),
+            ),
             isLoading = false,
         )
     }

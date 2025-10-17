@@ -74,6 +74,7 @@ class BduiScreenViewModel @AssistedInject constructor(
                 action.screenName,
                 action.screenNavigationParams
             )
+
             is BduiActionUi.ComponentClicked -> onComponentClicked(action.componentId)
             BduiActionUi.ScreenShown -> onScreenShown()
             BduiActionUi.ErrorScreenShown -> onErrorScreenShown()
@@ -136,14 +137,24 @@ class BduiScreenViewModel @AssistedInject constructor(
                         }
 
                         is BduiActionUi.UpdateScreen -> {
+                            val screenData = (_uiState.value as? UiState.Content<RenderedScreenUi>)?.data
                             ActionRequestModel.UpdateScreen(
                                 screenName = action.screenName,
-                                hashes = hashCollector.collect(
-                                    componentTree = (_uiState.value as? UiState.Content<RenderedScreenUi>)
-                                        ?.data
-                                        ?.components
-                                        ?: emptyList(),
+                                screenHashes = ActionRequestModel.UpdateScreen.ScreenHashes(
+                                    hashCollector.collect(
+                                        componentTree = screenData?.components ?: emptyList(),
+                                    ),
                                 ),
+                                topBarHash = screenData?.scaffold?.topBar?.let { topBar ->
+                                    ActionRequestModel.UpdateScreen.ScreenPartHashes(
+                                        hash = hashCollector.collect(component = topBar),
+                                    )
+                                },
+                                bottomBarHash = screenData?.scaffold?.bottomBar?.let { bottomBar ->
+                                    ActionRequestModel.UpdateScreen.ScreenPartHashes(
+                                        hash = hashCollector.collect(component = bottomBar),
+                                    )
+                                },
                                 screenNavigationParams = action.screenNavigationParams,
                             )
                         }
@@ -222,7 +233,7 @@ class BduiScreenViewModel @AssistedInject constructor(
 
             analytics.logScreenUpdated(
                 screenName = screenName,
-                updatedComponentsCount = updateScreenResponse.data.size,
+                updatedComponentsCount = updateScreenResponse.screen.size,
                 updateDurationMs = durationMs,
             )
 

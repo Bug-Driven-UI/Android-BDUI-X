@@ -9,16 +9,16 @@ class BduiScreenHashCollector @Inject constructor() {
     fun collect(
         componentTree: List<BduiComponentUi>,
     ): List<HashNode> {
-        return componentTree.map(::collectInternal)
+        return componentTree.map(::collect)
     }
 
-    private fun collectInternal(component: BduiComponentUi): HashNode {
+    fun collect(component: BduiComponentUi): HashNode {
         return HashNode(
             id = component.baseProperties.id,
             hash = component.baseProperties.hash,
             children = (component as? BduiComponentUi.Container)
                 ?.children
-                ?.map(::collectInternal)
+                ?.map(::collect)
                 .orEmpty(),
         )
     }

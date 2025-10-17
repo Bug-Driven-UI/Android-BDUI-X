@@ -28,9 +28,22 @@ sealed interface ActionRequestModel {
     @SerialName("updateScreen")
     data class UpdateScreen(
         @SerialName("screenName") val screenName: String,
-        @SerialName("hashes") val hashes: List<HashNode>,
+        @SerialName("screen") val screenHashes: ScreenHashes,
+        @SerialName("topBar") val topBarHash: ScreenPartHashes? = null,
+        @SerialName("bottomBar") val bottomBarHash: ScreenPartHashes? = null,
         @SerialName("screenNavigationParams") val screenNavigationParams: Map<String, JsonElement>? = null,
-    ) : ActionRequestModel
+    ) : ActionRequestModel {
+
+        @Serializable
+        data class ScreenHashes(
+            @SerialName("hashes") val hashes: List<HashNode>,
+        )
+
+        @Serializable
+        data class ScreenPartHashes(
+            @SerialName("hashNode") val hash: HashNode,
+        )
+    }
 }
 
 @Serializable
