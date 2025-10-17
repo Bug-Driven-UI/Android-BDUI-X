@@ -84,7 +84,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // TODO loader
         Box(
             modifier = Modifier
                 .fillMaxWidth()
