@@ -102,8 +102,12 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
                 )
             }
 
-            RenderedActionModel.RenderedNavigateBackActionModel -> {
-                actions.add(NavigateBack)
+            is RenderedActionModel.RenderedNavigateBackActionModel -> {
+                actions.add(
+                    NavigateBack(
+                        updatePreviousScreen = action.updatePreviousScreen,
+                    )
+                )
             }
 
             is RenderedActionModel.RenderedNavigateToActionModel -> {
@@ -111,6 +115,16 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
                     NavigateTo(
                         screenName = action.screenName,
                         screenNavigationParams = action.screenNavigationParams,
+                    )
+                )
+            }
+
+            is RenderedActionModel.RenderedNavigateToBottomSheetActionModel -> {
+                actions.add(
+                    NavigateTo(
+                        screenName = action.screenName,
+                        screenNavigationParams = action.screenNavigationParams,
+                        toBottomSheet = true,
                     )
                 )
             }

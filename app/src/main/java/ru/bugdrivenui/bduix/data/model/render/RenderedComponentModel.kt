@@ -10,7 +10,6 @@ import ru.bugdrivenui.bduix.data.model.RenderedActionModel
 import ru.bugdrivenui.bduix.data.model.RenderedBadgeModel
 import ru.bugdrivenui.bduix.data.model.RenderedBorderModel
 import ru.bugdrivenui.bduix.data.model.RenderedColorStyleModel
-import ru.bugdrivenui.bduix.data.model.RenderedHintModel
 import ru.bugdrivenui.bduix.data.model.RenderedInsetsModel
 import ru.bugdrivenui.bduix.data.model.RenderedInteractionModel
 import ru.bugdrivenui.bduix.data.model.RenderedPlaceholderModel
@@ -39,6 +38,7 @@ sealed interface RenderedComponentModel {
         @SerialName("children") val children: List<RenderedComponentModel>,
         @SerialName("horizontalArrangement") val horizontalArrangement: RenderedHorizontalArrangement? = null,
         @SerialName("verticalAlignment") val verticalAlignment: RenderedVerticalAlignment? = null,
+        @SerialName("isScrollable") val isScrollable: Boolean? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
         @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),
@@ -127,7 +127,6 @@ sealed interface RenderedComponentModel {
         @SerialName("rightIcon") val rightIcon: Image? = null,
         @SerialName("regex") val regex: RenderedRegexModel? = null,
         @SerialName("placeholder") val placeholder: RenderedPlaceholderModel? = null,
-        @SerialName("hint") val hint: RenderedHintModel? = null, // TODO удалить
         @SerialName("onValueChanged") val onValueChanged: List<RenderedActionModel>? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,

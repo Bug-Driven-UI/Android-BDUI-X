@@ -40,7 +40,6 @@ sealed interface BduiComponentUi {
         override val baseProperties: BaseProperties,
         val text: BduiText,
         val placeholder: BduiText?,
-        val hint: BduiText?, // TODO удалить
         val rightIcon: Image?,
         val onValueChangedActions: List<BduiActionUi.InputValueChangedApplicable>,
     ) : BduiComponentUi {
@@ -71,6 +70,7 @@ sealed interface BduiComponentUi {
     data class Row(
         val horizontalArrangement: BduiHorizontalArrangement?,
         val verticalAlignment: BduiVerticalAlignment?,
+        val isScrollable: Boolean = false,
         override val baseProperties: BaseProperties,
         override val children: List<BduiComponentUi>,
     ) : Container {

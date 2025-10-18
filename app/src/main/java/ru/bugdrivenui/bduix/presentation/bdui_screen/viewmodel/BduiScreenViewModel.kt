@@ -24,6 +24,7 @@ import ru.bugdrivenui.bduix.core.analytics.AnalyticsNavigationMethod
 import ru.bugdrivenui.bduix.core.analytics.IAnalyticsLoggerFacade
 import ru.bugdrivenui.bduix.core.navigation.NavigationManager
 import ru.bugdrivenui.bduix.core.navigation.NavigationRoute
+import ru.bugdrivenui.bduix.core.navigation.SHOULD_UPDATE_SCREEN_KEY
 import ru.bugdrivenui.bduix.core.resources.IResourcesWrapper
 import ru.bugdrivenui.bduix.core.snackbar.SnackbarManager
 import ru.bugdrivenui.bduix.data.model.RenderedScreenModel
@@ -36,14 +37,15 @@ import ru.bugdrivenui.bduix.domain.state.State
 import ru.bugdrivenui.bduix.presentation.bdui_screen.factory.BduiScreenFactory
 import ru.bugdrivenui.bduix.presentation.bdui_screen.hash.BduiScreenHashCollector
 import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateResolver
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateStore
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.Path
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.allNodesCount
-import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateStore
-import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.Path
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.common.updateIfContent
+import ru.bugdrivenui.bduix.utils.asList
 
 @HiltViewModel(assistedFactory = BduiScreenViewModel.Factory::class)
 class BduiScreenViewModel @AssistedInject constructor(
@@ -76,12 +78,13 @@ class BduiScreenViewModel @AssistedInject constructor(
 
     fun onAction(action: BduiActionUi) {
         when (action) {
-            BduiActionUi.NavigateBack -> onNavigateBack()
+            is BduiActionUi.NavigateBack -> onNavigateBack(action.updatePreviousScreen)
             is BduiActionUi.SendRemoteActions -> onRemoteActions(action.actions)
             BduiActionUi.Retry -> onRetry()
             is BduiActionUi.NavigateTo -> onNavigateTo(
-                action.screenName,
-                action.screenNavigationParams
+                screenName = action.screenName,
+                screenNavigationParams = action.screenNavigationParams,
+                toBottomSheet = action.toBottomSheet,
             )
 
             is BduiActionUi.ComponentClicked -> onComponentClicked(action.componentId)
@@ -101,6 +104,8 @@ class BduiScreenViewModel @AssistedInject constructor(
                 path = action.targetPath,
                 newValue = action.newValue,
             )
+
+            BduiActionUi.UpdateScreenResultReceived -> onUpdateScreenResultReceived()
         }
     }
 
@@ -275,13 +280,17 @@ class BduiScreenViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onNavigateBack() {
+    private fun onNavigateBack(updatePreviousScreen: Boolean) {
         analytics.logUserNavigated(
             fromScreenName = screenName,
             toScreenName = null,
             method = AnalyticsNavigationMethod.BACK,
         )
-        navigationManager.back()
+        if (updatePreviousScreen) {
+            navigationManager.backWithResult(SHOULD_UPDATE_SCREEN_KEY, true)
+        } else {
+            navigationManager.back()
+        }
     }
 
     private fun onRetry() {
@@ -291,15 +300,26 @@ class BduiScreenViewModel @AssistedInject constructor(
     private fun onNavigateTo(
         screenName: String,
         screenNavigationParams: Map<String, JsonElement>?,
+        toBottomSheet: Boolean = false,
     ) {
-        navigationManager.navigate(
-            route = NavigationRoute.BduiScreen(
-                args = NavigationRoute.BduiScreen.Args(
+        if (toBottomSheet) {
+            navigationManager.navigateToBottomSheet(
+                route = NavigationRoute.BottomSheet.BduiBottomSheet,
+                args = NavigationRoute.BottomSheet.BduiBottomSheet.Args(
                     screenName = screenName,
                     screenParams = screenNavigationParams,
+                ),
+            )
+        } else {
+            navigationManager.navigate(
+                route = NavigationRoute.BduiScreen(
+                    args = NavigationRoute.BduiScreen.Args(
+                        screenName = screenName,
+                        screenParams = screenNavigationParams,
+                    )
                 )
             )
-        )
+        }
         analytics.logUserNavigated(
             fromScreenName = this.screenName,
             toScreenName = screenName,
@@ -366,6 +386,15 @@ class BduiScreenViewModel @AssistedInject constructor(
         newInputValue: String,
     ) {
         localStateStore.setString(path, newInputValue)
+    }
+
+    private fun onUpdateScreenResultReceived() {
+        onRemoteActions(
+            BduiActionUi.UpdateScreen(
+                screenName = screenName,
+                screenNavigationParams = screenParams,
+            ).asList()
+        )
     }
 
     @AssistedFactory

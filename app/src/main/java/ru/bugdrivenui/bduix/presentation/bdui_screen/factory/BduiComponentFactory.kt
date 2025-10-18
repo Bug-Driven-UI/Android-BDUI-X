@@ -79,6 +79,7 @@ class BduiComponentFactory @Inject constructor(
         return BduiComponentUi.Row(
             horizontalArrangement = component.horizontalArrangement.toBduiArrangement(),
             verticalAlignment = component.verticalAlignment.toBduiAlignment(),
+            isScrollable = component.isScrollable ?: false,
             baseProperties = createBaseProperties(component),
             children = component.children.map(::create),
         )
@@ -130,7 +131,6 @@ class BduiComponentFactory @Inject constructor(
             baseProperties = createBaseProperties(component),
             text = component.textWithStyle.let(mapper::toBduiText),
             placeholder = component.placeholder?.textWithStyle?.let(mapper::toBduiText),
-            hint = component.hint?.textWithStyle?.let(mapper::toBduiText),
             rightIcon = component.rightIcon?.let(::createImageComponent),
             onValueChangedActions = buildList {
                 component.onValueChanged?.forEach { action ->

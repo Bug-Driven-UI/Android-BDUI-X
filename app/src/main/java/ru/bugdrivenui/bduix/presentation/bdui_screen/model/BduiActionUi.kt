@@ -29,6 +29,7 @@ sealed interface BduiActionUi {
     data class NavigateTo(
         val screenName: String,
         val screenNavigationParams: Map<String, JsonElement>?,
+        val toBottomSheet: Boolean = false,
     ) : BduiActionUi
 
     data object ScreenShown : BduiActionUi
@@ -45,7 +46,9 @@ sealed interface BduiActionUi {
         val componentId: String,
     ) : BduiActionUi
 
-    data object NavigateBack : BduiActionUi
+    data class NavigateBack(
+        val updatePreviousScreen: Boolean = false,
+    ) : BduiActionUi
 
     data object Retry : BduiActionUi
 
@@ -62,4 +65,6 @@ sealed interface BduiActionUi {
         val targetPath: Path,
         val newValue: JsonPrimitive,
     ) : BduiActionUi
+
+    data object UpdateScreenResultReceived : BduiActionUi
 }

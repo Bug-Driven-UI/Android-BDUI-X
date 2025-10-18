@@ -69,8 +69,17 @@ sealed interface RenderedActionModel {
     ) : RenderedActionModel
 
     @Serializable
+    @SerialName("navigateToBottomSheet")
+    data class RenderedNavigateToBottomSheetActionModel(
+        @SerialName("screenName") val screenName: String,
+        @SerialName("screenNavigationParams") val screenNavigationParams: Map<String, JsonElement>? = null,
+    ) : RenderedActionModel
+
+    @Serializable
     @SerialName("navigateBack")
-    data object RenderedNavigateBackActionModel : RenderedActionModel
+    data class RenderedNavigateBackActionModel(
+        @SerialName("updatePreviousScreen") val updatePreviousScreen: Boolean,
+    ) : RenderedActionModel
 
     @Serializable
     @SerialName("setLocalStateFromInput")

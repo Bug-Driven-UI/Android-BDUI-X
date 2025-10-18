@@ -82,6 +82,23 @@ sealed interface NavigationCommand {
             }
         }
     }
+
+    data class BackWithResult<T : Any>(
+        val key: String,
+        val result: T,
+    ) : NavigationCommand {
+
+        override fun execute(navController: NavController) {
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set(key, result)
+
+            val popped = navController.popBackStack()
+//            if (!popped) {
+//                navController.context.findActivity()?.finish()
+//            }
+        }
+    }
 }
 
 private tailrec fun Context.findActivity(): Activity? = when (this) {

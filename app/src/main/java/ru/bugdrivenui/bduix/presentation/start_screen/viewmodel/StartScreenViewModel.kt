@@ -24,7 +24,7 @@ class StartScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(5000)
+            delay(700)
             loadInitialBduiScreen()
         }
     }

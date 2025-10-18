@@ -16,6 +16,7 @@ class BduiTextColors(
 class BduiComponentColors(
     val button: BduiButtonColors,
     val toast: BduiToastColors,
+    val divider: BduiDividerColors,
 )
 
 class BduiButtonColors(
@@ -32,6 +33,10 @@ class BduiButtonTextColors(
 )
 
 class BduiToastColors(
+    val default: Color,
+)
+
+class BduiDividerColors(
     val default: Color,
 )
 
@@ -53,6 +58,7 @@ private fun getBduiComponentColors(): BduiComponentColors {
     return BduiComponentColors(
         button = getBduiButtonColors(),
         toast = getBduiToastColors(),
+        divider = getBduiDividerColors(),
     )
 }
 
@@ -78,6 +84,12 @@ private fun getBduiButtonTextColors(): BduiButtonTextColors {
 private fun getBduiToastColors(): BduiToastColors {
     return BduiToastColors(
         default = Color(0xFF141414),
+    )
+}
+
+private fun getBduiDividerColors(): BduiDividerColors {
+    return BduiDividerColors(
+        default = Color(0xFFEBEAE8),
     )
 }
 

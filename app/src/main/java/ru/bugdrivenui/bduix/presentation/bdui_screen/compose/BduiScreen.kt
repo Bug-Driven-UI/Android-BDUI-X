@@ -52,7 +52,7 @@ fun BduiScreen(
     val onAction: (BduiActionUi) -> Unit = remember { viewModel::onAction }
 
     BackHandler(
-        onBack = { onAction.invoke(BduiActionUi.NavigateBack) },
+        onBack = { onAction.invoke(BduiActionUi.NavigateBack()) },
     )
 
     CompositionLocalProvider(LocalLocalStates provides viewModel.localStates) {
@@ -99,48 +99,52 @@ private fun BduiScreenScaffold(
         onAction.invoke(BduiActionUi.ScreenShown)
     }
 
-    Scaffold(
-        modifier = Modifier.onGloballyPositioned {
-            if (!reported) {
-                reported = true
-                scope.launch {
-                    withFrameNanos { now ->
-                        val ms = (now - renderingStartNs) / 1_000_000
-                        onAction.invoke(
-                            BduiActionUi.ScreenRendered(
-                                renderTimeMs = ms,
-                                screenVersion = model.version,
-                                components = model.components,
+    OverlayLoader(
+        isLoading = model.isLoading,
+    ) {
+        Scaffold(
+            modifier = Modifier.onGloballyPositioned {
+                if (!reported) {
+                    reported = true
+                    scope.launch {
+                        withFrameNanos { now ->
+                            val ms = (now - renderingStartNs) / 1_000_000
+                            onAction.invoke(
+                                BduiActionUi.ScreenRendered(
+                                    renderTimeMs = ms,
+                                    screenVersion = model.version,
+                                    components = model.components,
+                                )
                             )
-                        )
+                        }
                     }
                 }
+            },
+            containerColor = Color.White,
+            snackbarHost = { AppSnackbarHost(snackbarHostState) },
+            topBar = {
+                model.scaffold?.topBar?.let { topBar ->
+                    TopBar(
+                        component = topBar,
+                        onAction = onAction,
+                    )
+                }
+            },
+            bottomBar = {
+                model.scaffold?.bottomBar?.let { bottomBar ->
+                    BottomBar(
+                        component = bottomBar,
+                        onAction = onAction,
+                    )
+                }
             }
-        },
-        containerColor = Color.White,
-        snackbarHost = { AppSnackbarHost(snackbarHostState) },
-        topBar = {
-            model.scaffold?.topBar?.let { topBar ->
-                TopBar(
-                    component = topBar,
-                    onAction = onAction,
-                )
-            }
-        },
-        bottomBar = {
-            model.scaffold?.bottomBar?.let { bottomBar ->
-                BottomBar(
-                    component = bottomBar,
-                    onAction = onAction,
-                )
-            }
+        ) { contentPadding ->
+            BduiScreenContent(
+                model = model,
+                onAction = onAction,
+                contentPadding = contentPadding,
+            )
         }
-    ) { contentPadding ->
-        BduiScreenContent(
-            model = model,
-            onAction = onAction,
-            contentPadding = contentPadding,
-        )
     }
 }
 
@@ -150,25 +154,23 @@ private fun BduiScreenContent(
     onAction: (BduiActionUi) -> Unit,
     contentPadding: PaddingValues,
 ) {
-    OverlayLoader(isLoading = model.isLoading) {
-        LazyColumn(
-            modifier = Modifier
-                .background(Color.White)
-                .consumeWindowInsets(contentPadding),
-            contentPadding = contentPadding,
-        ) {
-            items(model.components) { component ->
-                BduiComponent(
-                    modifier = Modifier
-                        .bduiBaseProperties(
-                            component = component.baseProperties,
-                            onAction = onAction,
-                            buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
-                        ),
-                    component = component,
-                    onAction = onAction,
-                )
-            }
+    LazyColumn(
+        modifier = Modifier
+            .background(Color.White)
+            .consumeWindowInsets(contentPadding),
+        contentPadding = contentPadding,
+    ) {
+        items(model.components) { component ->
+            BduiComponent(
+                modifier = Modifier
+                    .bduiBaseProperties(
+                        component = component.baseProperties,
+                        onAction = onAction,
+                        buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
+                    ),
+                component = component,
+                onAction = onAction,
+            )
         }
     }
 }

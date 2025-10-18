@@ -38,4 +38,9 @@ class NavigationManager @Inject constructor() {
     ) = tryAddCommand(NavigationCommand.Replace(route))
 
     fun back() = tryAddCommand(NavigationCommand.Back)
+
+    fun <T : Any> backWithResult(
+        key: String,
+        result: T,
+    ) = tryAddCommand(NavigationCommand.BackWithResult(key, result))
 }

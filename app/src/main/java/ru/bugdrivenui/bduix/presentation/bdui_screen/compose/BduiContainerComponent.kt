@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toCompose
@@ -52,16 +55,34 @@ fun BduiContainerComponent(
         }
 
         is BduiComponentUi.Row -> {
-            Row(
-                modifier = modifier,
-                horizontalArrangement = component.horizontalArrangement.toCompose(),
-                verticalAlignment = component.verticalAlignment.toCompose(),
-            ) {
-                component.children.forEach { child ->
-                    BduiComponentWrapper(
-                        component = child,
-                        onAction = onAction,
-                    )
+            val arrangement = component.horizontalArrangement.toCompose()
+            val alignment = component.verticalAlignment.toCompose()
+
+            if (component.isScrollable) {
+                LazyRow(
+                    modifier = modifier,
+                    horizontalArrangement = arrangement,
+                    verticalAlignment = alignment,
+                ) {
+                    items(component.children) { child ->
+                        BduiComponentWrapper(
+                            component = child,
+                            onAction = onAction,
+                        )
+                    }
+                }
+            } else {
+                Row(
+                    modifier = modifier,
+                    horizontalArrangement = arrangement,
+                    verticalAlignment = alignment,
+                ) {
+                    component.children.forEach { child ->
+                        BduiComponentWrapper(
+                            component = child,
+                            onAction = onAction,
+                        )
+                    }
                 }
             }
         }
@@ -120,6 +141,24 @@ private fun RowScope.BduiComponentWrapper(
                 buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
             )
             .ifNotNull(weightedWidth) { weight(it) },
+        component = component,
+        onAction = onAction,
+    )
+}
+
+@Composable
+private fun LazyItemScope.BduiComponentWrapper(
+    component: BduiComponentUi,
+    onAction: (BduiActionUi) -> Unit,
+) {
+    // ignore weight
+    BduiComponent(
+        modifier = Modifier
+            .bduiBaseProperties(
+                component = component.baseProperties,
+                onAction = onAction,
+                buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
+            ),
         component = component,
         onAction = onAction,
     )
