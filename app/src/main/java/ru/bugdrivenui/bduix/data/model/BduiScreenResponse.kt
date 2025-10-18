@@ -7,6 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import ru.bugdrivenui.bduix.data.model.render.RenderedComponentModel
 
 @Serializable
@@ -20,6 +21,7 @@ data class RenderedScreenModel(
     @SerialName("version") val version: Int,
     @SerialName("components") val components: List<RenderedComponentModel>,
     @SerialName("scaffold") val scaffold: RenderedScaffoldModel? = null,
+    @SerialName("localStates") val localStates: Map<String, JsonElement>? = null,
 )
 
 @Serializable
@@ -69,6 +71,19 @@ sealed interface RenderedActionModel {
     @Serializable
     @SerialName("navigateBack")
     data object RenderedNavigateBackActionModel : RenderedActionModel
+
+    @Serializable
+    @SerialName("setLocalStateFromInput")
+    data class RenderedSetLocalStateFromInputActionModel(
+        @SerialName("target") val target: String,
+    ) : RenderedActionModel
+
+    @Serializable
+    @SerialName("setLocalState")
+    data class RenderedSetLocalStateActionModel(
+        @SerialName("target") val target: String,
+        @SerialName("value") val value: JsonPrimitive,
+    ) : RenderedActionModel
 }
 
 @Serializable
@@ -131,7 +146,7 @@ data class RenderedShapeModel(
 
 @Serializable
 data class RenderedStyledTextRepresentationModel(
-    @SerialName("text") val text: String,
+    @SerialName("text") val textOrLocalState: String,
     @SerialName("textStyle") val textStyle: RenderedTextStyleModel,
     @SerialName("colorStyle") val textColorStyle: RenderedColorStyleModel,
     @SerialName("textAlignment") val textAlignment: TextAlignmentModel? = null,

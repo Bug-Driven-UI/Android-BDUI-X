@@ -10,6 +10,7 @@ import ru.bugdrivenui.bduix.data.model.RenderedSizeModel
 import ru.bugdrivenui.bduix.data.model.RenderedStyledTextRepresentationModel
 import ru.bugdrivenui.bduix.data.model.RenderedTextDecorationTypeModel
 import ru.bugdrivenui.bduix.data.model.RenderedTextStyleModel
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateResolver
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi.*
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiBorder
@@ -22,8 +23,36 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextAlignment
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextStyle
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.TextOrLocalState
 import ru.bugdrivenui.bduix.presentation.utils.PresentationConstants.DEFAULT_TEXT_COLOR_HEX
 import ru.bugdrivenui.bduix.utils.orZero
+import javax.inject.Inject
+
+class BduiComponentPropertiesMapper @Inject constructor(
+    private val localStateResolver: LocalStateResolver,
+) {
+
+    fun toBduiText(model: RenderedStyledTextRepresentationModel): BduiText {
+        val value = localStateResolver.resolveRawPath(model.textOrLocalState)?.let { localStatePath ->
+            TextOrLocalState.LocalState(localStatePath)
+        } ?: TextOrLocalState.Text(model.textOrLocalState)
+
+        return BduiText(
+            value = value,
+            color = model.textColorStyle.toBduiColor(
+                fallbackColor = BduiColor(DEFAULT_TEXT_COLOR_HEX),
+            ),
+            style = model.textStyle.toBduiTextStyle(),
+            textAlignment = model.textAlignment?.let { alignment ->
+                when (alignment) {
+                    RenderedStyledTextRepresentationModel.TextAlignmentModel.START -> BduiTextAlignment.START
+                    RenderedStyledTextRepresentationModel.TextAlignmentModel.CENTER -> BduiTextAlignment.CENTER
+                    RenderedStyledTextRepresentationModel.TextAlignmentModel.END -> BduiTextAlignment.END
+                }
+            },
+        )
+    }
+}
 
 fun RenderedColorStyleModel?.toBduiColor(
     fallbackColor: BduiColor = BduiColor.Default,
@@ -85,6 +114,20 @@ fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
                     )
                 )
             }
+
+            is RenderedActionModel.RenderedSetLocalStateActionModel -> {
+                actions.add(
+                    SetLocalState(
+                        targetPath = action.target,
+                        newValue = action.value,
+                    )
+                )
+            }
+
+            // TODO отрефакторить в отдельную модель на data уровне
+            is RenderedActionModel.RenderedSetLocalStateFromInputActionModel -> {
+                Unit // not processed in common actions
+            }
         }
     }
     if (remoteActions.isNotEmpty()) {
@@ -113,23 +156,6 @@ fun RenderedSizeModel.toComponentSize(): BduiComponentSize {
         is RenderedSizeModel.RenderedSizeWeightedModel -> BduiComponentSize.Weighted(this.fraction)
         RenderedSizeModel.RenderedSizeWrapContentModel -> BduiComponentSize.WrapContent
     }
-}
-
-fun RenderedStyledTextRepresentationModel.toBduiText(): BduiText {
-    return BduiText(
-        value = this.text,
-        color = this.textColorStyle.toBduiColor(
-            fallbackColor = BduiColor(DEFAULT_TEXT_COLOR_HEX),
-        ),
-        style = this.textStyle.toBduiTextStyle(),
-        textAlignment = this.textAlignment?.let { alignment ->
-            when (alignment) {
-                RenderedStyledTextRepresentationModel.TextAlignmentModel.START -> BduiTextAlignment.START
-                RenderedStyledTextRepresentationModel.TextAlignmentModel.CENTER -> BduiTextAlignment.CENTER
-                RenderedStyledTextRepresentationModel.TextAlignmentModel.END -> BduiTextAlignment.END
-            }
-        },
-    )
 }
 
 fun RenderedTextStyleModel.toBduiTextStyle(): BduiTextStyle {

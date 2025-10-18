@@ -18,9 +18,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import ru.bugdrivenui.bduix.R
 import ru.bugdrivenui.bduix.core.analytics.AnalyticsNavigationMethod
 import ru.bugdrivenui.bduix.core.analytics.IAnalyticsLoggerFacade
+import ru.bugdrivenui.bduix.core.navigation.NavigationManager
+import ru.bugdrivenui.bduix.core.navigation.NavigationRoute
+import ru.bugdrivenui.bduix.core.resources.IResourcesWrapper
+import ru.bugdrivenui.bduix.core.snackbar.SnackbarManager
+import ru.bugdrivenui.bduix.data.model.RenderedScreenModel
 import ru.bugdrivenui.bduix.data.model.action.ActionRequestModel
 import ru.bugdrivenui.bduix.data.model.action.ActionResponseModel
 import ru.bugdrivenui.bduix.data.model.action.ScreenDoActionRequestModel
@@ -29,16 +35,15 @@ import ru.bugdrivenui.bduix.domain.interactor.BduiInteractor
 import ru.bugdrivenui.bduix.domain.state.State
 import ru.bugdrivenui.bduix.presentation.bdui_screen.factory.BduiScreenFactory
 import ru.bugdrivenui.bduix.presentation.bdui_screen.hash.BduiScreenHashCollector
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateResolver
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.allNodesCount
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateStore
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.Path
 import ru.bugdrivenui.bduix.presentation.common.UiState
 import ru.bugdrivenui.bduix.presentation.common.updateIfContent
-import ru.bugdrivenui.bduix.core.navigation.NavigationManager
-import ru.bugdrivenui.bduix.core.navigation.NavigationRoute
-import ru.bugdrivenui.bduix.core.resources.IResourcesWrapper
-import ru.bugdrivenui.bduix.core.snackbar.SnackbarManager
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.allNodesCount
 
 @HiltViewModel(assistedFactory = BduiScreenViewModel.Factory::class)
 class BduiScreenViewModel @AssistedInject constructor(
@@ -51,10 +56,14 @@ class BduiScreenViewModel @AssistedInject constructor(
     private val snackbarManager: SnackbarManager,
     private val resourcesWrapper: IResourcesWrapper,
     private val analytics: IAnalyticsLoggerFacade,
+    private val localStateStore: LocalStateStore,
+    private val localStateResolver: LocalStateResolver,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<UiState<RenderedScreenUi>>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    val localStates = localStateStore.localStates
 
     private val _refreshTrigger = MutableSharedFlow<Unit>(
         replay = 1,
@@ -83,6 +92,15 @@ class BduiScreenViewModel @AssistedInject constructor(
                 screenVersion = action.screenVersion,
                 components = action.components,
             )
+            is BduiActionUi.InputValueChanged -> onInputValueChanged(
+                actions = action.actions,
+                newInputValue = action.newInputValue,
+            )
+
+            is BduiActionUi.SetLocalState -> onSetLocalState(
+                path = action.targetPath,
+                newValue = action.newValue,
+            )
         }
     }
 
@@ -98,6 +116,11 @@ class BduiScreenViewModel @AssistedInject constructor(
         _refreshTrigger
             .flatMapLatest {
                 bduiInteractor.getScreen(request)
+            }
+            .onEach { state ->
+                if (state is State.Success) {
+                    initializeLocalStateStore(state.data.screen)
+                }
             }
             .map { state ->
                 when (state) {
@@ -118,8 +141,16 @@ class BduiScreenViewModel @AssistedInject constructor(
             }
             .onEach { state ->
                 _uiState.update { state }
+
+                if (state is UiState.Error) {
+                    localStateStore.clear()
+                }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun initializeLocalStateStore(screen: RenderedScreenModel) {
+        localStateStore.setAll(screen.localStates ?: emptyMap())
     }
 
     private fun onRemoteActions(
@@ -130,9 +161,12 @@ class BduiScreenViewModel @AssistedInject constructor(
                 actions = actions.map { action ->
                     when (action) {
                         is BduiActionUi.Command -> {
+                            val params = action.params?.mapValues { (_, value) ->
+                                localStateResolver.resolveLocalStateRefs(value)
+                            }
                             ActionRequestModel.Command(
                                 name = action.name,
-                                params = action.params,
+                                params = params,
                             )
                         }
 
@@ -303,6 +337,35 @@ class BduiScreenViewModel @AssistedInject constructor(
             componentsCount = components.allNodesCount(),
             renderTimeMs = renderTimeMs,
         )
+    }
+
+    private fun onInputValueChanged(
+        actions: List<BduiActionUi.InputValueChangedApplicable>,
+        newInputValue: String,
+    ) {
+        actions.forEach { action ->
+            when (action) {
+                is BduiActionUi.SendRemoteActions -> onRemoteActions(action.actions)
+                is BduiActionUi.SetLocalStateFromInput -> onSetLocalStateFromInput(
+                    path = action.targetPath,
+                    newInputValue = newInputValue,
+                )
+            }
+        }
+    }
+
+    private fun onSetLocalState(
+        path: Path,
+        newValue: JsonPrimitive,
+    ) {
+        localStateStore.set(path, newValue)
+    }
+
+    private fun onSetLocalStateFromInput(
+        path: Path,
+        newInputValue: String,
+    ) {
+        localStateStore.setString(path, newInputValue)
     }
 
     @AssistedFactory

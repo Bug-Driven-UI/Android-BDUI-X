@@ -1,18 +1,21 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.factory
 
+import ru.bugdrivenui.bduix.data.model.RenderedActionModel
 import ru.bugdrivenui.bduix.data.model.render.RenderedComponentModel
 import ru.bugdrivenui.bduix.data.model.render.RenderedHorizontalAlignment
 import ru.bugdrivenui.bduix.data.model.render.RenderedHorizontalAndVerticalAlignment
 import ru.bugdrivenui.bduix.data.model.render.RenderedHorizontalArrangement
 import ru.bugdrivenui.bduix.data.model.render.RenderedVerticalAlignment
 import ru.bugdrivenui.bduix.data.model.render.RenderedVerticalArrangement
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateResolver
+import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.BduiComponentPropertiesMapper
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiBorder
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiColor
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiInteractions
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiShape
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiText
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentInsets
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiHorizontalAlignment
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiHorizontalAndVerticalAlignment
@@ -21,7 +24,10 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiVerticalAlignment
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiVerticalArrangement
 import javax.inject.Inject
 
-class BduiComponentFactory @Inject constructor() {
+class BduiComponentFactory @Inject constructor(
+    private val localStateResolver: LocalStateResolver,
+    private val mapper: BduiComponentPropertiesMapper,
+) {
 
     fun create(
         component: RenderedComponentModel,
@@ -94,7 +100,7 @@ class BduiComponentFactory @Inject constructor() {
     ): BduiComponentUi {
         return BduiComponentUi.Text(
             baseProperties = createBaseProperties(component),
-            text = component.textWithStyle.toBduiText(),
+            text = mapper.toBduiText(component.textWithStyle),
         )
     }
 
@@ -110,7 +116,7 @@ class BduiComponentFactory @Inject constructor() {
 
     private fun createImageComponent(
         component: RenderedComponentModel.Image,
-    ): BduiComponentUi {
+    ): BduiComponentUi.Image {
         return BduiComponentUi.Image(
             baseProperties = createBaseProperties(component) { it.copy(backgroundColor = null) },
             imageUrl = component.imageUrl,
@@ -122,9 +128,22 @@ class BduiComponentFactory @Inject constructor() {
     ): BduiComponentUi {
         return BduiComponentUi.Input(
             baseProperties = createBaseProperties(component),
-            text = component.textWithStyle.toBduiText(),
-            placeholder = component.placeholder?.textWithStyle?.toBduiText(),
-            hint = component.hint?.textWithStyle?.toBduiText(),
+            text = component.textWithStyle.let(mapper::toBduiText),
+            placeholder = component.placeholder?.textWithStyle?.let(mapper::toBduiText),
+            hint = component.hint?.textWithStyle?.let(mapper::toBduiText),
+            rightIcon = component.rightIcon?.let(::createImageComponent),
+            onValueChangedActions = buildList {
+                component.onValueChanged?.forEach { action ->
+                    when (action) {
+                        is RenderedActionModel.RenderedSetLocalStateFromInputActionModel -> {
+                            localStateResolver.resolveRawPath(action.target)?.let { path ->
+                                BduiActionUi.SetLocalStateFromInput(path)
+                            }
+                        }
+                        else -> null
+                    }?.let(::add)
+                }
+            }
         )
     }
 

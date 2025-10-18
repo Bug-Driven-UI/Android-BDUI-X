@@ -39,6 +39,7 @@ fun BduiComponent(
             BduiInputComponent(
                 modifier = modifier,
                 component = component,
+                onAction = onAction,
             )
         }
 

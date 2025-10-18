@@ -6,6 +6,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
+import ru.bugdrivenui.bduix.data.model.RenderedActionModel
 import ru.bugdrivenui.bduix.data.model.RenderedBadgeModel
 import ru.bugdrivenui.bduix.data.model.RenderedBorderModel
 import ru.bugdrivenui.bduix.data.model.RenderedColorStyleModel
@@ -122,11 +123,12 @@ sealed interface RenderedComponentModel {
     @SerialName("input")
     data class Input(
         @SerialName("textWithStyle") val textWithStyle: RenderedStyledTextRepresentationModel,
-        @SerialName("mask") val mask: Mask?,
-        @SerialName("rightIcon") val rightIcon: Image?,
-        @SerialName("regex") val regex: RenderedRegexModel?,
-        @SerialName("placeholder") val placeholder: RenderedPlaceholderModel?,
-        @SerialName("hint") val hint: RenderedHintModel?,
+        @SerialName("mask") val mask: Mask? = null,
+        @SerialName("rightIcon") val rightIcon: Image? = null,
+        @SerialName("regex") val regex: RenderedRegexModel? = null,
+        @SerialName("placeholder") val placeholder: RenderedPlaceholderModel? = null,
+        @SerialName("hint") val hint: RenderedHintModel? = null, // TODO удалить
+        @SerialName("onValueChanged") val onValueChanged: List<RenderedActionModel>? = null,
         @SerialName("id") override val id: String,
         @SerialName("hash") override val hash: String,
         @SerialName("interactions") override val interactions: List<RenderedInteractionModel> = emptyList(),

@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 import ru.bugdrivenui.bduix.core.snackbar.AppSnackbarHost
 import ru.bugdrivenui.bduix.core.snackbar.rememberAppSnackbarHostState
 import ru.bugdrivenui.bduix.presentation.LocalSnackbarManager
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalLocalStates
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.RenderedScreenUi
@@ -53,27 +55,29 @@ fun BduiScreen(
         onBack = { onAction.invoke(BduiActionUi.NavigateBack) },
     )
 
-    Crossfade(
-        targetState = uiState.key,
-    ) { stateKey ->
-        when (stateKey) {
-            UiState.Key.LOADING -> {
-                LoaderScreen()
-            }
-            UiState.Key.ERROR -> {
-                LaunchedEffect(key1 = Unit) {
-                    onAction.invoke(BduiActionUi.ErrorScreenShown)
+    CompositionLocalProvider(LocalLocalStates provides viewModel.localStates) {
+        Crossfade(
+            targetState = uiState.key,
+        ) { stateKey ->
+            when (stateKey) {
+                UiState.Key.LOADING -> {
+                    LoaderScreen()
                 }
-                ErrorScreen(
-                    modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
-                    onRetry = { onAction.invoke(BduiActionUi.Retry) },
-                )
-            }
-            UiState.Key.CONTENT -> {
-                BduiScreenScaffold(
-                    model = (uiState as UiState.Content<RenderedScreenUi>).data,
-                    onAction = onAction,
-                )
+                UiState.Key.ERROR -> {
+                    LaunchedEffect(key1 = Unit) {
+                        onAction.invoke(BduiActionUi.ErrorScreenShown)
+                    }
+                    ErrorScreen(
+                        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+                        onRetry = { onAction.invoke(BduiActionUi.Retry) },
+                    )
+                }
+                UiState.Key.CONTENT -> {
+                    BduiScreenScaffold(
+                        model = (uiState as UiState.Content<RenderedScreenUi>).data,
+                        onAction = onAction,
+                    )
+                }
             }
         }
     }

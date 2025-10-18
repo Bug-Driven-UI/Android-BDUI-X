@@ -1,7 +1,6 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.model
 
 import androidx.compose.runtime.Immutable
-import kotlinx.serialization.json.JsonElement
 import ru.bugdrivenui.bduix.presentation.utils.PresentationConstants.DEFAULT_BG_COLOR_HEX
 
 data class BduiScaffoldUi(
@@ -41,7 +40,9 @@ sealed interface BduiComponentUi {
         override val baseProperties: BaseProperties,
         val text: BduiText,
         val placeholder: BduiText?,
-        val hint: BduiText?,
+        val hint: BduiText?, // TODO удалить
+        val rightIcon: Image?,
+        val onValueChangedActions: List<BduiActionUi.InputValueChangedApplicable>,
     ) : BduiComponentUi {
         override val type: BduiComponentTypeUi = BduiComponentTypeUi.INPUT
     }
@@ -98,8 +99,14 @@ sealed interface BduiComponentUi {
     )
 }
 
+sealed interface TextOrLocalState {
+
+    data class Text(val value: String) : TextOrLocalState
+    data class LocalState(val path: String) : TextOrLocalState
+}
+
 data class BduiText(
-    val value: String,
+    val value: TextOrLocalState,
     val color: BduiColor,
     val style: BduiTextStyle,
     val textAlignment: BduiTextAlignment?,
@@ -157,49 +164,6 @@ data class BduiComponentInteractionsUi(
     val onClick: List<BduiActionUi>?,
     val onShow: List<BduiActionUi>?,
 )
-
-@Immutable
-sealed interface BduiActionUi {
-
-    sealed interface Remote
-
-    data class Command(
-        val name: String,
-        val params: Map<String, JsonElement>?,
-    ) : Remote
-
-    data class UpdateScreen(
-        val screenName: String,
-        val screenNavigationParams: Map<String, JsonElement>?,
-    ) : Remote
-
-    data class SendRemoteActions(
-        val actions: List<Remote>,
-    ) : BduiActionUi
-
-    data class NavigateTo(
-        val screenName: String,
-        val screenNavigationParams: Map<String, JsonElement>?,
-    ) : BduiActionUi
-
-    data object ScreenShown : BduiActionUi
-
-    data class ScreenRendered(
-        val renderTimeMs: Long,
-        val screenVersion: Int,
-        val components: List<BduiComponentUi>,
-    ) : BduiActionUi
-
-    data object ErrorScreenShown : BduiActionUi
-
-    data class ComponentClicked(
-        val componentId: String,
-    ) : BduiActionUi
-
-    data object NavigateBack : BduiActionUi
-
-    data object Retry : BduiActionUi
-}
 
 enum class BduiComponentTypeUi {
     TEXT,

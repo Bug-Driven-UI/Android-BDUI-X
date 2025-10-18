@@ -1,178 +1,126 @@
 package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeColor
+import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.rememberTextOrLocalState
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComposeTextStyle
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiBorder
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiColor
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentInsetsUi
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentSize
+import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiActionUi
 import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiComponentUi
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiShape
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiText
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextDecorationType
-import ru.bugdrivenui.bduix.presentation.bdui_screen.model.BduiTextStyle
-
-@Composable
-fun BduiInputField(
-    modifier: Modifier = Modifier,
-    component: BduiComponentUi.Input,
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
-    enabled: Boolean = true,
-    singleLine: Boolean = true,
-    showClearButton: Boolean = true,
-    onClear: (() -> Unit)? = null,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-) {
-    val textStyle = component.text.toComposeTextStyle()
-    val placeholderStyle = component.placeholder
-        ?.toComposeTextStyle()
-        ?.copy(color = component.placeholder.color.toComposeColor().copy(alpha = 0.5f))
-
-    val contentModifier = modifier
-        .defaultMinSize(minHeight = 48.dp)
-
-    BasicTextField(
-        value = value,
-        onValueChange = { onValueChange(it) },
-        enabled = enabled,
-        singleLine = singleLine,
-        textStyle = textStyle.merge(LocalTextStyle.current),
-        visualTransformation = visualTransformation,
-        modifier = contentModifier,
-        decorationBox = { inner ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(modifier = Modifier.weight(1f)) {
-                    if (value.text.isEmpty() && placeholderStyle != null) {
-                        Text(
-                            text = component.placeholder.value,
-                            style = placeholderStyle
-                        )
-                    }
-                    inner()
-                }
-                if (showClearButton && value.text.isNotEmpty()) {
-                    Text(
-                        text = "✕",
-                        modifier = Modifier
-                            .padding(start = 8.dp)
-                            .size(28.dp)
-                            .clickable(enabled = enabled) {
-                                onClear?.invoke()
-                            }
-                            .wrapContentSize(Alignment.Center),
-                        style = textStyle
-                    )
-                }
-            }
-        }
-    )
-}
+import ru.bugdrivenui.bduix.presentation.utils.bduiBaseProperties
 
 @Composable
 fun BduiInputComponent(
-    modifier: Modifier = Modifier,
     component: BduiComponentUi.Input,
-    enabled: Boolean = true,
-    singleLine: Boolean = true,
-    showClearButton: Boolean = true,
-    onValueChanged: ((String) -> Unit)? = null,
+    onAction: (BduiActionUi) -> Unit,
+    modifier: Modifier,
 ) {
-    val externalInitial = component.text.value
-    var fieldValue by rememberSaveable(component.baseProperties.id, stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(externalInitial))
-    }
+    val text = rememberTextOrLocalState(component.text.value)
+    val placeholder = component.placeholder?.value?.let { rememberTextOrLocalState(it) }
+    val hint = component.hint?.value?.let { rememberTextOrLocalState(it) }
 
-    LaunchedEffect(component.text.value) {
-        val external = component.text.value
-        if (external != fieldValue.text) {
-            fieldValue = TextFieldValue(
-                text = external,
-                selection = TextRange(external.length)
-            )
-        }
-    }
-
-    BduiInputField(
+    BduiInputBasicField(
         modifier = modifier,
-        component = component,
-        value = fieldValue,
-        onValueChange = {
-            fieldValue = it
-            onValueChanged?.invoke(it.text)
+        value = text.value,
+        onValueChange = { newValue ->
+            onAction.invoke(
+                BduiActionUi.InputValueChanged(
+                    actions = component.onValueChangedActions,
+                    newInputValue = newValue,
+                )
+            )
         },
-        enabled = enabled,
-        singleLine = singleLine,
-        showClearButton = showClearButton,
-        onClear = {
-            fieldValue = TextFieldValue("")
-            onValueChanged?.invoke("")
-        }
+        placeholder = placeholder?.value,
+        textStyle = component.text.toComposeTextStyle(),
+        placeholderTextStyle = component.placeholder?.toComposeTextStyle(),
+        hint = hint?.value,
+        hintTextStyle = component.hint?.toComposeTextStyle(),
+        rightIcon = component.rightIcon?.let { iconComponent ->
+            {
+                BduiImageComponent(
+                    modifier = Modifier
+                        .bduiBaseProperties(
+                            component = iconComponent.baseProperties,
+                            onAction = onAction,
+                            buttonEnabled = false,
+                        ),
+                    component = iconComponent,
+                )
+            }
+        },
     )
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF141414)
 @Composable
-private fun BduiInputComponent_Preview() {
-    val component = BduiComponentUi.Input(
-        baseProperties = BduiComponentUi.BaseProperties(
-            id = "preview_input",
-            hash = "preview_hash",
-            interactions = null,
-            paddings = BduiComponentInsetsUi(16, 12, 16, 12),
-            margins = null,
-            width = BduiComponentSize.Fixed(280),
-            height = BduiComponentSize.WrapContent,
-            backgroundColor = BduiColor("#1A965EEB"),
-            border = BduiBorder(BduiColor("#965EEB"), 2),
-            shape = BduiShape.RoundedCorners(12, 12, 12, 12),
-        ),
-        text = BduiText(
-            value = "",
-            color = BduiColor("#FFFFFF"),
-            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 15),
-            textAlignment = null,
-        ),
-        placeholder = BduiText(
-            value = "Введите текст",
-            color = BduiColor("#FFFFFF"),
-            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 15),
-            textAlignment = null,
-        ),
-        hint = BduiText(
-            value = "",
-            color = BduiColor("#965EEB"),
-            style = BduiTextStyle(BduiTextDecorationType.REGULAR, 400, 12),
-            textAlignment = null,
-        ),
-    )
-    BduiInputComponent(component = component)
+fun BduiInputBasicField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle? = null,
+    enabled: Boolean = true,
+    singleLine: Boolean = true,
+    placeholder: String? = null,
+    placeholderTextStyle: TextStyle? = null,
+    hint: String? = null,
+    hintTextStyle: TextStyle? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    rightIcon: @Composable (() -> Unit)? = null,
+) {
+    Column {
+        BasicTextField(
+            modifier = modifier.defaultMinSize(minHeight = 44.dp),
+            value = value,
+            onValueChange = onValueChange,
+            enabled = enabled,
+            singleLine = singleLine,
+            textStyle = textStyle ?: TextStyle.Default,
+            visualTransformation = visualTransformation,
+            decorationBox = { inner ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (value.isEmpty() && placeholder != null) {
+                            Text(
+                                text = placeholder,
+                                style = placeholderTextStyle ?: TextStyle.Default,
+                            )
+                        }
+                        inner()
+                    }
+                    rightIcon?.let { icon ->
+                        Box(
+                            modifier = Modifier.padding(start = 4.dp),
+                        ) {
+                            icon.invoke()
+                        }
+                    }
+                }
+            }
+        )
+        hint?.let { hint ->
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = hint,
+                style = hintTextStyle ?: TextStyle.Default,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+        }
+    }
 }
