@@ -44,8 +44,7 @@ fun BduiText.toComposeTextStyle(): TextStyle {
     val weight = style.weight.toComposeFontWeight()
     val decoration = when (style.decorationType) {
         BduiTextDecorationType.UNDERLINE -> TextDecoration.Underline
-        BduiTextDecorationType.STRIKETHROUGH,
-        BduiTextDecorationType.STRIKETHROUGH_RED -> TextDecoration.LineThrough
+        BduiTextDecorationType.STRIKETHROUGH -> TextDecoration.LineThrough
         else -> null
     }
     return TextStyle(
