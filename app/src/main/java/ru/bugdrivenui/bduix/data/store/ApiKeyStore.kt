@@ -2,6 +2,7 @@ package ru.bugdrivenui.bduix.data.store
 
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -17,7 +18,7 @@ import com.google.crypto.tink.integration.android.AndroidKeysetManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,15 +37,20 @@ class ApiKeyStore @Inject constructor(
         private val API_KEY_PREFS_KEY = stringPreferencesKey("api_key")
     }
 
-    private val aead: Aead by lazy {
-        AeadConfig.register()
-        val keysetManager = AndroidKeysetManager.Builder()
-            .withSharedPref(context, KEYSET_NAME, KEYSET_PREF)
-            .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
-            .withMasterKeyUri(MASTER_KEY_URI)
-            .build()
+    private val aead: Aead? by lazy {
+        try {
+            AeadConfig.register()
+            val keysetManager = AndroidKeysetManager.Builder()
+                .withSharedPref(context, KEYSET_NAME, KEYSET_PREF)
+                .withKeyTemplate(AesGcmKeyManager.aes256GcmTemplate())
+                .withMasterKeyUri(MASTER_KEY_URI)
+                .build()
 
-        keysetManager.keysetHandle.getPrimitive(Aead::class.java)
+            keysetManager.keysetHandle.getPrimitive(Aead::class.java)
+        } catch (e: Exception) {
+            Log.e("ApiKeyStore", e.message.orEmpty())
+            null
+        }
     }
 
     private val dataStore: DataStore<Preferences> =
@@ -58,22 +64,28 @@ class ApiKeyStore @Inject constructor(
                 if (e is IOException) emit(emptyPreferences()) else throw e
             }
             .map { prefs ->
-                prefs[API_KEY_PREFS_KEY]?.let { b64 ->
+                val b64 = prefs[API_KEY_PREFS_KEY] ?: return@map null
+                val aead = aead ?: return@map null
+                try {
                     val ciphertext = Base64.decode(b64, Base64.NO_WRAP)
                     val plaintext = aead.decrypt(ciphertext, null)
                     String(plaintext, Charsets.UTF_8)
+                } catch (e: Exception) {
+                    Log.e("ApiKeyStore", e.message.orEmpty())
+                    null
                 }
             }
 
-    suspend fun getApiKey(): String? = tokenFlow.first()
+    suspend fun getApiKey(): String? = tokenFlow.firstOrNull()
 
     suspend fun saveApiKey(apiKey: String) {
-        val ciphertext = aead.encrypt(apiKey.toByteArray(Charsets.UTF_8), null)
-        val encoded = Base64.encodeToString(ciphertext, Base64.NO_WRAP)
-        dataStore.edit { it[API_KEY_PREFS_KEY] = encoded }
-    }
-
-    suspend fun removeApiKey() {
-        dataStore.edit { it.remove(API_KEY_PREFS_KEY) }
+        val aead = aead ?: throw IllegalStateException("Keystore is not available")
+        try {
+            val ciphertext = aead.encrypt(apiKey.toByteArray(Charsets.UTF_8), null)
+            val encoded = Base64.encodeToString(ciphertext, Base64.NO_WRAP)
+            dataStore.edit { it[API_KEY_PREFS_KEY] = encoded }
+        } catch (e: IOException) {
+            throw e
+        }
     }
 }

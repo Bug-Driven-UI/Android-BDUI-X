@@ -1,5 +1,6 @@
 package ru.bugdrivenui.bduix.data.repository
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import ru.bugdrivenui.bduix.data.api.BduiApi
 import ru.bugdrivenui.bduix.data.store.ApiKeyStore
@@ -19,7 +20,8 @@ class LoginRepository @Inject constructor(
             api.check(apiKey).toResult()
         }.also { result ->
             if (result is Result.Success && result.data) {
-                apiKeyStore.saveApiKey(apiKey)
+                runCatching { apiKeyStore.saveApiKey(apiKey) }
+                    .onFailure { e -> Log.e("LoginRepository", e.message.orEmpty()) }
             }
         }
     }
