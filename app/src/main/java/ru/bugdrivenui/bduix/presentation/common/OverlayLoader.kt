@@ -1,6 +1,6 @@
 package ru.bugdrivenui.bduix.presentation.common
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,25 +16,25 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.compose.BduiLoaderComponent
 fun OverlayLoader(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
+    shouldFillMaxSize: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    val rootModifier = if (shouldFillMaxSize) modifier.fillMaxSize() else modifier
+
+    Box(modifier = rootModifier) {
         content()
-        Crossfade(targetState = isLoading) { loading ->
-            if (loading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White.copy(alpha = 0.6f)),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    BduiLoaderComponent(
-                        modifier = Modifier.size(
-                            width = 24.dp,
-                            height = 24.dp,
-                        )
-                    )
-                }
+        AnimatedVisibility(
+            visible = isLoading,
+            modifier = Modifier
+                .matchParentSize(),
+        ) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color.White.copy(alpha = 0.6f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                BduiLoaderComponent(Modifier.size(24.dp))
             }
         }
     }

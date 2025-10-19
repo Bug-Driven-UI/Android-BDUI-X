@@ -149,7 +149,15 @@ class BduiComponentPropertiesMapper @Inject constructor(
                 )
             )
         }
-        return actions
+
+        val (navigation, other) = actions.partition(::isNavigationAction)
+        return other + navigation
+    }
+
+    private fun isNavigationAction(action: BduiActionUi): Boolean = when (action) {
+        is NavigateBack,
+        is NavigateTo -> true
+        else -> false
     }
 }
 

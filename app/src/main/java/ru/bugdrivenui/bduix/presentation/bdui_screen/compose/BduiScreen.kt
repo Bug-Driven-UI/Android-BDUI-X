@@ -3,15 +3,22 @@ package ru.bugdrivenui.bduix.presentation.bdui_screen.compose
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -47,6 +54,7 @@ import ru.bugdrivenui.bduix.utils.toComposeShape
 @Composable
 fun BduiScreen(
     viewModel: BduiScreenViewModel,
+    isBottomSheet: Boolean = false,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val onAction: (BduiActionUi) -> Unit = remember { viewModel::onAction }
@@ -56,28 +64,81 @@ fun BduiScreen(
     )
 
     CompositionLocalProvider(LocalLocalStates provides viewModel.localStates) {
-        Crossfade(
-            targetState = uiState.key,
-        ) { stateKey ->
-            when (stateKey) {
-                UiState.Key.LOADING -> {
-                    LoaderScreen()
+        if (isBottomSheet) {
+            BduiBottomSheet(
+                uiState = uiState,
+                onAction = onAction,
+            )
+        } else {
+            BduiScreenCrossfade(
+                uiState = uiState,
+                onAction = onAction,
+            )
+        }
+    }
+}
+
+@Composable
+fun BduiBottomSheet(
+    uiState: UiState<RenderedScreenUi>,
+    onAction: (BduiActionUi) -> Unit,
+) {
+    when (uiState) {
+        is UiState.Content -> {
+            OverlayLoader(
+                isLoading = uiState.data.isLoading,
+                shouldFillMaxSize = false,
+            ) {
+                BduiBottomSheetContent(
+                    model = uiState.data,
+                    onAction = onAction,
+                )
+            }
+        }
+        UiState.Error -> {
+            LaunchedEffect(key1 = Unit) {
+                onAction.invoke(BduiActionUi.NavigateBack())
+            }
+        }
+        UiState.Loading -> {
+            LoaderScreen(
+                modifier = Modifier.size(
+                    width = 375.dp,
+                    height = 375.dp,
+                )
+            )
+        }
+    }
+}
+
+@Composable
+private fun BduiScreenCrossfade(
+    uiState: UiState<RenderedScreenUi>,
+    onAction: (BduiActionUi) -> Unit,
+) {
+    Crossfade(
+        targetState = uiState.key,
+    ) { stateKey ->
+        when (stateKey) {
+            UiState.Key.LOADING -> {
+                LoaderScreen(
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+            UiState.Key.ERROR -> {
+                LaunchedEffect(key1 = Unit) {
+                    onAction.invoke(BduiActionUi.ErrorScreenShown)
                 }
-                UiState.Key.ERROR -> {
-                    LaunchedEffect(key1 = Unit) {
-                        onAction.invoke(BduiActionUi.ErrorScreenShown)
-                    }
-                    ErrorScreen(
-                        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
-                        onRetry = { onAction.invoke(BduiActionUi.Retry) },
-                    )
-                }
-                UiState.Key.CONTENT -> {
-                    BduiScreenScaffold(
-                        model = (uiState as UiState.Content<RenderedScreenUi>).data,
-                        onAction = onAction,
-                    )
-                }
+                ErrorScreen(
+                    modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
+                    onRetry = { onAction.invoke(BduiActionUi.Retry) },
+                )
+            }
+            UiState.Key.CONTENT -> {
+                BduiScreenScaffold(
+                    model = (uiState as UiState.Content<RenderedScreenUi>).data,
+                    onAction = onAction,
+                )
             }
         }
     }
@@ -100,6 +161,7 @@ private fun BduiScreenScaffold(
     }
 
     OverlayLoader(
+        modifier = Modifier.fillMaxSize(),
         isLoading = model.isLoading,
     ) {
         Scaffold(
@@ -172,6 +234,32 @@ private fun BduiScreenContent(
                 onAction = onAction,
             )
         }
+    }
+}
+
+@Composable
+fun BduiBottomSheetContent(
+    model: RenderedScreenUi,
+    onAction: (BduiActionUi) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .background(Color.White)
+            .verticalScroll(rememberScrollState())
+    ) {
+        model.components.forEach { component ->
+            BduiComponent(
+                modifier = Modifier
+                    .bduiBaseProperties(
+                        component = component.baseProperties,
+                        onAction = onAction,
+                        buttonEnabled = (component as? BduiComponentUi.Button)?.enabled
+                    ),
+                component = component,
+                onAction = onAction,
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

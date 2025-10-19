@@ -7,6 +7,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,6 +67,8 @@ class BduiScreenViewModel @AssistedInject constructor(
     val uiState = _uiState.asStateFlow()
 
     val localStates = localStateStore.localStates
+
+    private var remoteCommandsJob: Job? = null
 
     private val _refreshTrigger = MutableSharedFlow<Unit>(
         replay = 1,
@@ -160,80 +163,82 @@ class BduiScreenViewModel @AssistedInject constructor(
 
     private fun onRemoteActions(
         actions: List<BduiActionUi.Remote>,
-    ) = viewModelScope.launch {
-        bduiInteractor.doAction(
-            request = ScreenDoActionRequestModel(
-                actions = actions.map { action ->
-                    when (action) {
-                        is BduiActionUi.Command -> {
-                            val params = action.params?.mapValues { (_, value) ->
-                                localStateResolver.resolveLocalStateRefs(value)
+    ) {
+        remoteCommandsJob = viewModelScope.launch {
+            bduiInteractor.doAction(
+                request = ScreenDoActionRequestModel(
+                    actions = actions.map { action ->
+                        when (action) {
+                            is BduiActionUi.Command -> {
+                                val params = action.params?.mapValues { (_, value) ->
+                                    localStateResolver.resolveLocalStateRefs(value)
+                                }
+                                ActionRequestModel.Command(
+                                    name = action.name,
+                                    params = params,
+                                )
                             }
-                            ActionRequestModel.Command(
-                                name = action.name,
-                                params = params,
-                            )
-                        }
 
-                        is BduiActionUi.UpdateScreen -> {
-                            val screenData = (_uiState.value as? UiState.Content<RenderedScreenUi>)?.data
-                            ActionRequestModel.UpdateScreen(
-                                screenName = action.screenName,
-                                screenHashes = ActionRequestModel.UpdateScreen.ScreenHashes(
-                                    hashCollector.collect(
-                                        componentTree = screenData?.components ?: emptyList(),
+                            is BduiActionUi.UpdateScreen -> {
+                                val screenData = (_uiState.value as? UiState.Content<RenderedScreenUi>)?.data
+                                ActionRequestModel.UpdateScreen(
+                                    screenName = action.screenName,
+                                    screenHashes = ActionRequestModel.UpdateScreen.ScreenHashes(
+                                        hashCollector.collect(
+                                            componentTree = screenData?.components ?: emptyList(),
+                                        ),
                                     ),
-                                ),
-                                topBarHash = screenData?.scaffold?.topBar?.let { topBar ->
-                                    ActionRequestModel.UpdateScreen.ScreenPartHashes(
-                                        hash = hashCollector.collect(component = topBar),
-                                    )
-                                },
-                                bottomBarHash = screenData?.scaffold?.bottomBar?.let { bottomBar ->
-                                    ActionRequestModel.UpdateScreen.ScreenPartHashes(
-                                        hash = hashCollector.collect(component = bottomBar),
-                                    )
-                                },
-                                screenNavigationParams = action.screenNavigationParams,
+                                    topBarHash = screenData?.scaffold?.topBar?.let { topBar ->
+                                        ActionRequestModel.UpdateScreen.ScreenPartHashes(
+                                            hash = hashCollector.collect(component = topBar),
+                                        )
+                                    },
+                                    bottomBarHash = screenData?.scaffold?.bottomBar?.let { bottomBar ->
+                                        ActionRequestModel.UpdateScreen.ScreenPartHashes(
+                                            hash = hashCollector.collect(component = bottomBar),
+                                        )
+                                    },
+                                    screenNavigationParams = action.screenNavigationParams,
+                                )
+                            }
+                        }
+                    }
+                )
+            ).collectLatest { doActionResponse ->
+                when (doActionResponse) {
+                    State.Loading -> {
+                        _uiState.updateIfContent { state ->
+                            screenFactory.setLoadingScreen(
+                                screen = state,
+                                isLoading = true,
                             )
                         }
                     }
-                }
-            )
-        ).collectLatest { doActionResponse ->
-            when (doActionResponse) {
-                State.Loading -> {
-                    _uiState.updateIfContent { state ->
-                        screenFactory.setLoadingScreen(
-                            screen = state,
-                            isLoading = true,
-                        )
-                    }
-                }
 
-                is State.Error -> {
-                    _uiState.updateIfContent { state ->
-                        screenFactory.setLoadingScreen(
-                            screen = state,
-                            isLoading = false,
-                        )
-                    }
-                    snackbarManager.show(
-                        text = resourcesWrapper.getString(R.string.general_error_snackbar_text),
-                    )
-                    analytics.logErrorSnackbarShown(
-                        screenName = screenName,
-                        message = null,
-                    )
-                }
-
-                is State.Success -> {
-                    doActionResponse.data.responses.forEach { actionResponse ->
-                        when (actionResponse) {
-                            is ActionResponseModel.Command -> onCommandResponse(actionResponse.response.data)
-                            is ActionResponseModel.UpdateScreen -> onUpdateScreenResponse(
-                                actionResponse.response
+                    is State.Error -> {
+                        _uiState.updateIfContent { state ->
+                            screenFactory.setLoadingScreen(
+                                screen = state,
+                                isLoading = false,
                             )
+                        }
+                        snackbarManager.show(
+                            text = resourcesWrapper.getString(R.string.general_error_snackbar_text),
+                        )
+                        analytics.logErrorSnackbarShown(
+                            screenName = screenName,
+                            message = null,
+                        )
+                    }
+
+                    is State.Success -> {
+                        doActionResponse.data.responses.forEach { actionResponse ->
+                            when (actionResponse) {
+                                is ActionResponseModel.Command -> onCommandResponse(actionResponse.response.data)
+                                is ActionResponseModel.UpdateScreen -> onUpdateScreenResponse(
+                                    actionResponse.response
+                                )
+                            }
                         }
                     }
                 }
@@ -280,7 +285,10 @@ class BduiScreenViewModel @AssistedInject constructor(
         }
     }
 
-    private fun onNavigateBack(updatePreviousScreen: Boolean) {
+    private fun onNavigateBack(updatePreviousScreen: Boolean) = viewModelScope.launch {
+        if (remoteCommandsJob?.isActive == true) {
+            remoteCommandsJob?.join()
+        }
         analytics.logUserNavigated(
             fromScreenName = screenName,
             toScreenName = null,

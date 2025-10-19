@@ -90,16 +90,18 @@ fun BduiNavGraph(
             )
 
             var isHidden by remember { mutableStateOf(false) }
-            ModalBottomSheet(
-                sheetState = rememberModalBottomSheetState(
-                    confirmValueChange = {
-                        if (it == SheetValue.Hidden && !isHidden) {
-                            isHidden = true
-                            navController.popBackStack()
-                        }
-                        true
+            val sheetState = rememberModalBottomSheetState(
+                skipPartiallyExpanded = true,
+                confirmValueChange = {
+                    if (it == SheetValue.Hidden && !isHidden) {
+                        isHidden = true
+                        navController.popBackStack()
                     }
-                ),
+                    true
+                }
+            )
+            ModalBottomSheet(
+                sheetState = sheetState,
                 onDismissRequest = {},
                 containerColor = Color.White,
                 dragHandle = {
@@ -112,7 +114,10 @@ fun BduiNavGraph(
                     }
                 },
             ) {
-                BduiScreen(viewModel)
+                BduiScreen(
+                    viewModel = viewModel,
+                    isBottomSheet = true,
+                )
             }
         }
     }
