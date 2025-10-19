@@ -11,7 +11,6 @@ import ru.bugdrivenui.bduix.presentation.bdui_screen.local_state.LocalStateResol
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.BduiComponentPropertiesMapper
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiBorder
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiColor
-import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiInteractions
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toBduiShape
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentInsets
 import ru.bugdrivenui.bduix.presentation.bdui_screen.mapper.toComponentSize
@@ -52,7 +51,7 @@ class BduiComponentFactory @Inject constructor(
         return BduiComponentUi.BaseProperties(
             id = component.id,
             hash = component.hash,
-            interactions = component.interactions.toBduiInteractions(),
+            interactions = component.interactions.let(mapper::toBduiInteractions),
             paddings = component.paddings.toComponentInsets(),
             margins = component.margins.toComponentInsets(),
             width = component.width.toComponentSize(),

@@ -52,106 +52,111 @@ class BduiComponentPropertiesMapper @Inject constructor(
             },
         )
     }
+
+    fun toBduiInteractions(model: List<RenderedInteractionModel>): BduiComponentInteractionsUi {
+        return BduiComponentInteractionsUi(
+            onClick = toBduiInteractionActions(
+                model = model,
+                interactionType = RenderedInteractionModel.Type.ON_CLICK,
+            ),
+            onShow = toBduiInteractionActions(
+                model = model,
+                interactionType = RenderedInteractionModel.Type.ON_SHOW,
+            ),
+        )
+    }
+
+    fun toBduiInteractionActions(
+        model: List<RenderedInteractionModel>,
+        interactionType: RenderedInteractionModel.Type,
+    ): List<BduiActionUi>? {
+        return model
+            .find { it.type == interactionType }
+            ?.let(::toBduiInteractionActions)
+    }
+
+    fun toBduiInteractionActions(model: RenderedInteractionModel): List<BduiActionUi> {
+        val actions = mutableListOf<BduiActionUi>()
+        val remoteActions = mutableListOf<Remote>()
+        model.actions.forEach { action ->
+            when (action) {
+                is RenderedActionModel.RenderedCommandActionModel -> {
+                    remoteActions.add(
+                        Command(
+                            name = action.name,
+                            params = action.params,
+                        )
+                    )
+                }
+
+                is RenderedActionModel.RenderedUpdateScreenActionModel -> {
+                    remoteActions.add(
+                        UpdateScreen(
+                            screenName = action.screenName,
+                            screenNavigationParams = action.screenNavigationParams,
+                        )
+                    )
+                }
+
+                is RenderedActionModel.RenderedNavigateBackActionModel -> {
+                    actions.add(
+                        NavigateBack(
+                            updatePreviousScreen = action.updatePreviousScreen,
+                        )
+                    )
+                }
+
+                is RenderedActionModel.RenderedNavigateToActionModel -> {
+                    actions.add(
+                        NavigateTo(
+                            screenName = action.screenName,
+                            screenNavigationParams = action.screenNavigationParams,
+                        )
+                    )
+                }
+
+                is RenderedActionModel.RenderedNavigateToBottomSheetActionModel -> {
+                    actions.add(
+                        NavigateTo(
+                            screenName = action.screenName,
+                            screenNavigationParams = action.screenNavigationParams,
+                            toBottomSheet = true,
+                        )
+                    )
+                }
+
+                is RenderedActionModel.RenderedSetLocalStateActionModel -> {
+                    localStateResolver.resolveRawPath(action.target)?.let { path ->
+                        actions.add(
+                            SetLocalState(
+                                targetPath = path,
+                                newValue = action.value,
+                            )
+                        )
+                    }
+                }
+
+                // TODO отрефакторить в отдельную модель на data уровне
+                is RenderedActionModel.RenderedSetLocalStateFromInputActionModel -> {
+                    Unit // not processed in common actions
+                }
+            }
+        }
+        if (remoteActions.isNotEmpty()) {
+            actions.add(
+                SendRemoteActions(
+                    actions = remoteActions,
+                )
+            )
+        }
+        return actions
+    }
 }
 
 fun RenderedColorStyleModel?.toBduiColor(
     fallbackColor: BduiColor = BduiColor.Default,
 ): BduiColor {
     return BduiColor(hex = this?.hex ?: fallbackColor.hex)
-}
-
-fun List<RenderedInteractionModel>.toBduiInteractions(): BduiComponentInteractionsUi {
-    return BduiComponentInteractionsUi(
-        onClick = this.toBduiInteractionActions(
-            interactionType = RenderedInteractionModel.Type.ON_CLICK,
-        ),
-        onShow = this.toBduiInteractionActions(
-            interactionType = RenderedInteractionModel.Type.ON_SHOW,
-        ),
-    )
-}
-
-fun List<RenderedInteractionModel>.toBduiInteractionActions(
-    interactionType: RenderedInteractionModel.Type,
-): List<BduiActionUi>? {
-    return this
-        .find { it.type == interactionType }
-        ?.toBduiInteractionActions()
-}
-
-fun RenderedInteractionModel.toBduiInteractionActions(): List<BduiActionUi> {
-    val actions = mutableListOf<BduiActionUi>()
-    val remoteActions = mutableListOf<Remote>()
-    this.actions.forEach { action ->
-        when (action) {
-            is RenderedActionModel.RenderedCommandActionModel -> {
-                remoteActions.add(
-                    Command(
-                        name = action.name,
-                        params = action.params,
-                    )
-                )
-            }
-
-            is RenderedActionModel.RenderedUpdateScreenActionModel -> {
-                remoteActions.add(
-                    UpdateScreen(
-                        screenName = action.screenName,
-                        screenNavigationParams = action.screenNavigationParams,
-                    )
-                )
-            }
-
-            is RenderedActionModel.RenderedNavigateBackActionModel -> {
-                actions.add(
-                    NavigateBack(
-                        updatePreviousScreen = action.updatePreviousScreen,
-                    )
-                )
-            }
-
-            is RenderedActionModel.RenderedNavigateToActionModel -> {
-                actions.add(
-                    NavigateTo(
-                        screenName = action.screenName,
-                        screenNavigationParams = action.screenNavigationParams,
-                    )
-                )
-            }
-
-            is RenderedActionModel.RenderedNavigateToBottomSheetActionModel -> {
-                actions.add(
-                    NavigateTo(
-                        screenName = action.screenName,
-                        screenNavigationParams = action.screenNavigationParams,
-                        toBottomSheet = true,
-                    )
-                )
-            }
-
-            is RenderedActionModel.RenderedSetLocalStateActionModel -> {
-                actions.add(
-                    SetLocalState(
-                        targetPath = action.target,
-                        newValue = action.value,
-                    )
-                )
-            }
-
-            // TODO отрефакторить в отдельную модель на data уровне
-            is RenderedActionModel.RenderedSetLocalStateFromInputActionModel -> {
-                Unit // not processed in common actions
-            }
-        }
-    }
-    if (remoteActions.isNotEmpty()) {
-        actions.add(
-            SendRemoteActions(
-                actions = remoteActions,
-            )
-        )
-    }
-    return actions
 }
 
 fun RenderedInsetsModel?.toComponentInsets(): BduiComponentInsetsUi {

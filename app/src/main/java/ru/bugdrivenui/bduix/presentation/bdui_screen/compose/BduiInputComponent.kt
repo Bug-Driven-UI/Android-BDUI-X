@@ -52,7 +52,7 @@ fun BduiInputComponent(
                         .bduiBaseProperties(
                             component = iconComponent.baseProperties,
                             onAction = onAction,
-                            buttonEnabled = false,
+                            buttonEnabled = null,
                         ),
                     component = iconComponent,
                 )
@@ -83,7 +83,7 @@ fun BduiInputBasicField(
             singleLine = singleLine,
             textStyle = textStyle ?: TextStyle.Default,
             visualTransformation = visualTransformation,
-            cursorBrush = SolidColor(Color.Unspecified),
+            cursorBrush = SolidColor(Color.Black),
             decorationBox = { inner ->
                 Row(
                     modifier = Modifier
